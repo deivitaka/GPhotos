@@ -3,13 +3,17 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		DF3C864C230AA4F900F7088A /* GPhotos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF3C8642230AA4F900F7088A /* GPhotos.framework */; };
 		DF3C8651230AA4F900F7088A /* GPhotosTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3C8650230AA4F900F7088A /* GPhotosTests.swift */; };
 		DF3C865D230AAAFD00F7088A /* GPhotos.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3C865C230AAAFD00F7088A /* GPhotos.swift */; };
+		DF3C86C6230B04E200F7088A /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3C86C5230B04E200F7088A /* Const.swift */; };
+		DF3C86C8230B07CC00F7088A /* AuthScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3C86C7230B07CC00F7088A /* AuthScope.swift */; };
+		DF3C86D4230B23C900F7088A /* Pods_GPhotos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF3C86D3230B23C900F7088A /* Pods_GPhotos.framework */; };
+		E264BCCAF5C6E606471FD2E6 /* Pods_GPhotos_GPhotosTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93F7A1FCF120C8E261B0B13F /* Pods_GPhotos_GPhotosTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -23,12 +27,21 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5FFE4515E5EC83DCCCC23AC6 /* Pods-GPhotos.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GPhotos.debug.xcconfig"; path = "Target Support Files/Pods-GPhotos/Pods-GPhotos.debug.xcconfig"; sourceTree = "<group>"; };
+		93F7A1FCF120C8E261B0B13F /* Pods_GPhotos_GPhotosTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GPhotos_GPhotosTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B408507E90A009E01D2569F9 /* Pods_GPhotos.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GPhotos.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B541345C1E6B3A6C42C3A9C8 /* Pods-GPhotos-GPhotosTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GPhotos-GPhotosTests.release.xcconfig"; path = "Target Support Files/Pods-GPhotos-GPhotosTests/Pods-GPhotos-GPhotosTests.release.xcconfig"; sourceTree = "<group>"; };
+		BFDB745CD556C24829261046 /* Pods-GPhotos-GPhotosTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GPhotos-GPhotosTests.debug.xcconfig"; path = "Target Support Files/Pods-GPhotos-GPhotosTests/Pods-GPhotos-GPhotosTests.debug.xcconfig"; sourceTree = "<group>"; };
+		C7BF9F142FFA8FBDB1E1F369 /* Pods-GPhotos.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GPhotos.release.xcconfig"; path = "Target Support Files/Pods-GPhotos/Pods-GPhotos.release.xcconfig"; sourceTree = "<group>"; };
 		DF3C8642230AA4F900F7088A /* GPhotos.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = GPhotos.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF3C8646230AA4F900F7088A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DF3C864B230AA4F900F7088A /* GPhotosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GPhotosTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF3C8650230AA4F900F7088A /* GPhotosTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPhotosTests.swift; sourceTree = "<group>"; };
 		DF3C8652230AA4F900F7088A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DF3C865C230AAAFD00F7088A /* GPhotos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPhotos.swift; sourceTree = "<group>"; };
+		DF3C86C5230B04E200F7088A /* Const.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Const.swift; sourceTree = "<group>"; };
+		DF3C86C7230B07CC00F7088A /* AuthScope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthScope.swift; sourceTree = "<group>"; };
+		DF3C86D3230B23C900F7088A /* Pods_GPhotos.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_GPhotos.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,6 +49,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DF3C86D4230B23C900F7088A /* Pods_GPhotos.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -44,18 +58,42 @@
 			buildActionMask = 2147483647;
 			files = (
 				DF3C864C230AA4F900F7088A /* GPhotos.framework in Frameworks */,
+				E264BCCAF5C6E606471FD2E6 /* Pods_GPhotos_GPhotosTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9558C96A984EF1484CCBAB59 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DF3C86D3230B23C900F7088A /* Pods_GPhotos.framework */,
+				B408507E90A009E01D2569F9 /* Pods_GPhotos.framework */,
+				93F7A1FCF120C8E261B0B13F /* Pods_GPhotos_GPhotosTests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		AB31DB6080DDAF9E68C31D2A /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				5FFE4515E5EC83DCCCC23AC6 /* Pods-GPhotos.debug.xcconfig */,
+				C7BF9F142FFA8FBDB1E1F369 /* Pods-GPhotos.release.xcconfig */,
+				BFDB745CD556C24829261046 /* Pods-GPhotos-GPhotosTests.debug.xcconfig */,
+				B541345C1E6B3A6C42C3A9C8 /* Pods-GPhotos-GPhotosTests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		DF3C8638230AA4F900F7088A = {
 			isa = PBXGroup;
 			children = (
 				DF3C8644230AA4F900F7088A /* GPhotos */,
 				DF3C864F230AA4F900F7088A /* GPhotosTests */,
 				DF3C8643230AA4F900F7088A /* Products */,
+				AB31DB6080DDAF9E68C31D2A /* Pods */,
+				9558C96A984EF1484CCBAB59 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -73,6 +111,7 @@
 			children = (
 				DF3C8646230AA4F900F7088A /* Info.plist */,
 				DF3C865C230AAAFD00F7088A /* GPhotos.swift */,
+				DF3C86CB230B0B1B00F7088A /* Helpers */,
 			);
 			path = GPhotos;
 			sourceTree = "<group>";
@@ -84,6 +123,15 @@
 				DF3C8652230AA4F900F7088A /* Info.plist */,
 			);
 			path = GPhotosTests;
+			sourceTree = "<group>";
+		};
+		DF3C86CB230B0B1B00F7088A /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				DF3C86C5230B04E200F7088A /* Const.swift */,
+				DF3C86C7230B07CC00F7088A /* AuthScope.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -103,6 +151,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DF3C8656230AA4F900F7088A /* Build configuration list for PBXNativeTarget "GPhotos" */;
 			buildPhases = (
+				5C35EF5FE10C9E7F6063C2CA /* [CP] Check Pods Manifest.lock */,
 				DF3C863D230AA4F900F7088A /* Headers */,
 				DF3C863E230AA4F900F7088A /* Sources */,
 				DF3C863F230AA4F900F7088A /* Frameworks */,
@@ -121,9 +170,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DF3C8659230AA4F900F7088A /* Build configuration list for PBXNativeTarget "GPhotosTests" */;
 			buildPhases = (
+				728C1B6BDFF9A9788267AC6A /* [CP] Check Pods Manifest.lock */,
 				DF3C8647230AA4F900F7088A /* Sources */,
 				DF3C8648230AA4F900F7088A /* Frameworks */,
 				DF3C8649230AA4F900F7088A /* Resources */,
+				65AEBC3708621E0D38B074CC /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -189,12 +240,78 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		5C35EF5FE10C9E7F6063C2CA /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-GPhotos-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		65AEBC3708621E0D38B074CC /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-GPhotos-GPhotosTests/Pods-GPhotos-GPhotosTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-GPhotos-GPhotosTests/Pods-GPhotos-GPhotosTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-GPhotos-GPhotosTests/Pods-GPhotos-GPhotosTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		728C1B6BDFF9A9788267AC6A /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-GPhotos-GPhotosTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		DF3C863E230AA4F900F7088A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DF3C86C8230B07CC00F7088A /* AuthScope.swift in Sources */,
 				DF3C865D230AAAFD00F7088A /* GPhotos.swift in Sources */,
+				DF3C86C6230B04E200F7088A /* Const.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -341,26 +458,20 @@
 		};
 		DF3C8657230AA4F900F7088A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5FFE4515E5EC83DCCCC23AC6 /* Pods-GPhotos.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
-				DEFINES_MODULE = YES;
+				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = 69BW6W5SGB;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = GPhotos/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.deivitaka.GPhotos;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -369,26 +480,20 @@
 		};
 		DF3C8658230AA4F900F7088A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C7BF9F142FFA8FBDB1E1F369 /* Pods-GPhotos.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
-				DEFINES_MODULE = YES;
+				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = 69BW6W5SGB;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = GPhotos/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.deivitaka.GPhotos;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -396,16 +501,9 @@
 		};
 		DF3C865A230AA4F900F7088A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BFDB745CD556C24829261046 /* Pods-GPhotos-GPhotosTests.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 69BW6W5SGB;
 				INFOPLIST_FILE = GPhotosTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.deivitaka.GPhotosTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -415,16 +513,9 @@
 		};
 		DF3C865B230AA4F900F7088A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B541345C1E6B3A6C42C3A9C8 /* Pods-GPhotos-GPhotosTests.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 69BW6W5SGB;
 				INFOPLIST_FILE = GPhotosTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.deivitaka.GPhotosTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
