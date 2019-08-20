@@ -20,6 +20,13 @@ internal var topVC: UIViewController? = {
     }
     return nil
 }()
+internal var defaults = UserDefaults.standard
+
+//MARK: DispatchQueue
+
+func background(_ execute: @escaping (()->Void)) {
+    DispatchQueue.global(qos: .background).async { execute() }
+}
 
 //MARK: Structs
 
@@ -27,6 +34,7 @@ internal struct Strings {
     private init() {}
     
     static let keychainName = "gphotos_keychain"
+    static let lastTokenRefresh = "lastTokenRefresh"
     
     static var photosAccessToken: String { get {
         return GPhotos.authorization?.authState.lastTokenResponse?.accessToken ?? ""

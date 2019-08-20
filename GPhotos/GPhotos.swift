@@ -15,7 +15,8 @@ public class GPhotos {
     internal static var currentAuthFlow: OIDExternalUserAgentSession?
     internal static var authorization: GTMAppAuthFetcherAuthorization?
     internal static var configuration: OIDServiceConfiguration?
-    
+    internal static var fetcherService = GTMSessionFetcherService()
+
     internal static var initialized = false
     public static var isAuthorized: Bool { get {
         return !Strings.photosAccessToken.isEmpty
@@ -93,6 +94,31 @@ internal extension GPhotos {
         
         guard topVC != nil else {
             fatalError("Could not find a view controller. Please make sure you are not calling from 'viewDidLoad' on the first View Controller.")
+        }
+    }
+    
+    static func refreshTokenIfNeeded() {
+        checkToken()
+        // Do a dummy call and GTMSessionFetcherService will take care of refreshing the token
+        background {
+            let now = Date().timeIntervalSinceReferenceDate
+            let lastChecked = defaults.double(forKey: Strings.lastTokenRefresh)
+            // Don't check within 5 minutes to avoid making unnecessary network calls
+            if now - lastChecked < 300 { return }
+            self.fetcherService.authorizer = self.authorization
+            if let tokenEndpoint = self.configuration?.tokenEndpoint {
+                let fetcher = self.fetcherService.fetcher(with: tokenEndpoint)
+                fetcher.beginFetch(completionHandler: { (data, error) in
+                    if let error = error as NSError?,
+                        error.domain == OIDOAuthTokenErrorDomain {
+                        log.e("Authorization error during token refresh.")
+                        self.authorization = nil
+                    }
+                    
+                    defaults.setValue(now, forKey: Strings.lastTokenRefresh)
+                    checkToken()
+                })
+            }
         }
     }
     
