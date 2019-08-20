@@ -22,40 +22,27 @@ public class GPhotos {
     }}
     
     public static func config() {
-        if Google.plistDict.allValues.isEmpty {
-            log.e("Could not load GoogleService-Info.plist")
-        }
-        
         authorization = GTMAppAuthFetcherAuthorization(fromKeychainForName: Strings.keychainName)
         configuration = GTMAppAuthFetcherAuthorization.configurationForGoogle()
+        initialized = true
     }
     
     public static func authorize(with scopes: Set<AuthScope> = [.openId], completion: ((Bool, Error?)->())? = nil) {
+        validate()
+        
         var success = false
         let redirectUrl = Google.urls.redirect!
         var scopes = scopes
         scopes.insert(.openId)
         
-        guard let config = configuration else {
-            log.e("'GPhotos.config()' is not called, or sothething has failed in the process.")
-            completion?(success, nil)
-            return
-        }
-        
-        guard let topVC = topVC else {
-            log.e("Could not find a view controller.")
-            completion?(false, nil)
-            return
-        }
-        
-        let request = OIDAuthorizationRequest(configuration: config,
+        let request = OIDAuthorizationRequest(configuration: configuration!,
                                               clientId: Google.info.clientId,
                                               scopes: scopes.map({ $0.rawValue }),
                                               redirectURL: redirectUrl,
                                               responseType: OIDResponseTypeCode,
                                               additionalParameters: [:])
         
-        currentAuthFlow = OIDAuthState.authState(byPresenting: request, presenting: topVC) { (state, error) in
+        currentAuthFlow = OIDAuthState.authState(byPresenting: request, presenting: topVC!) { (state, error) in
             guard let state = state else {
                 self.authorization = nil
                 completion?(success, nil)
@@ -66,12 +53,15 @@ public class GPhotos {
             self.authorization = auth
             // Serialize to Keychain
             success = GTMAppAuthFetcherAuthorization.save(auth, toKeychainForName: Strings.keychainName)
+            if !success { log.e("Could not save in keychain.") }
             completion?(success, error)
         }
 
     }
     
     public static func continueAuthorizationFlow(with url: URL) -> Bool {
+        validate()
+        
         // Sends the URL to the current authorization flow (if any) which will
         // process it if it relates to an authorization response.
         if let currentAuthFlow = currentAuthFlow,
@@ -83,8 +73,27 @@ public class GPhotos {
     }
     
     public static func logout() {
+        validate()
         currentAuthFlow = nil
         authorization = nil
         GTMAppAuthFetcherAuthorization.removeFromKeychain(forName: Strings.keychainName)
     }
+}
+
+internal extension GPhotos {
+    
+    static func validate() {
+        guard initialized else {
+            fatalError("'GPhotos.config()' has not been called")
+        }
+        
+        guard !Google.plistDict.allValues.isEmpty else {
+            fatalError("Could not load GoogleService-Info.plist. Please make sure it is added to the project.")
+        }
+        
+        guard topVC != nil else {
+            fatalError("Could not find a view controller. Please make sure you are not calling from 'viewDidLoad' on the first View Controller.")
+        }
+    }
+    
 }

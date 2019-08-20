@@ -24,6 +24,7 @@ class ViewController: UIViewController {
         if GPhotos.isAuthorized {
             GPhotos.logout()
             self.actionB.isEnabled = true
+            self.updateActionButton()
         } else {
             GPhotos.authorize() { (success, error) in
                 self.updateActionButton()

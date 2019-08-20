@@ -9,6 +9,8 @@
 import UIKit
 import GTMAppAuth
 
+//MARK: Global variables
+
 internal var topVC: UIViewController? = {
     if var topController = UIApplication.shared.keyWindow?.rootViewController {
         while let presentedViewController = topController.presentedViewController {
@@ -18,6 +20,8 @@ internal var topVC: UIViewController? = {
     }
     return nil
 }()
+
+//MARK: Structs
 
 internal struct Strings {
     private init() {}
