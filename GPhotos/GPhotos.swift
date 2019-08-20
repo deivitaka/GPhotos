@@ -26,6 +26,8 @@ public class GPhotos {
         authorization = GTMAppAuthFetcherAuthorization(fromKeychainForName: Strings.keychainName)
         configuration = GTMAppAuthFetcherAuthorization.configurationForGoogle()
         initialized = true
+        
+        refreshTokenIfNeeded()
     }
     
     public static func authorize(with scopes: Set<AuthScope> = [.openId], completion: ((Bool, Error?)->())? = nil) {
@@ -98,7 +100,6 @@ internal extension GPhotos {
     }
     
     static func refreshTokenIfNeeded() {
-        checkToken()
         // Do a dummy call and GTMSessionFetcherService will take care of refreshing the token
         background {
             let now = Date().timeIntervalSinceReferenceDate
@@ -116,7 +117,6 @@ internal extension GPhotos {
                     }
                     
                     defaults.setValue(now, forKey: Strings.lastTokenRefresh)
-                    checkToken()
                 })
             }
         }

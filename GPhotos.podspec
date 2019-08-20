@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
     s.homepage     = "https://github.com/deivitaka/GPhotos.git"
     s.license      = { :type => "MIT", :file => "LICENSE" }
     s.author       = { "Deivi Taka" => "deivitaka@gmail.com" }
-    s.social_media_url = 'http://linkedin.com/al/deivitaka'
+    s.social_media_url = 'https://www.linkedin.com/in/deivitaka/'
     
     s.source       = { :git => "https://github.com/deivitaka/GPhotos.git", :tag => "#{s.version}" }
     s.source_files  = "GPhotos/**/*"
