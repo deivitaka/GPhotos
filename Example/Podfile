@@ -1,0 +1,13 @@
+platform :ios, '8.0'
+use_frameworks!
+
+target 'GPhotos_Example' do
+  source 'git@github.com:CocoaPods/Specs.git'
+  
+  pod 'GPhotos', :path => '../'
+
+  target 'GPhotos_Tests' do
+    inherit! :search_paths
+
+  end
+end

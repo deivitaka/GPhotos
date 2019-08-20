@@ -14,9 +14,23 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "DF3C8641230AA4F900F7088A"
-               BuildableName = "GPhotos.framework"
-               BlueprintName = "GPhotos"
+               BlueprintIdentifier = "607FACCF1AFB9204008FA782"
+               BuildableName = "GPhotos_Example.app"
+               BlueprintName = "GPhotos_Example"
+               ReferencedContainer = "container:GPhotos.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "607FACE41AFB9204008FA782"
+               BuildableName = "GPhotos_Tests.xctest"
+               BlueprintName = "GPhotos_Tests"
                ReferencedContainer = "container:GPhotos.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -32,9 +46,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "DF3C864A230AA4F900F7088A"
-               BuildableName = "GPhotosTests.xctest"
-               BlueprintName = "GPhotosTests"
+               BlueprintIdentifier = "607FACE41AFB9204008FA782"
+               BuildableName = "GPhotos_Tests.xctest"
+               BlueprintName = "GPhotos_Tests"
                ReferencedContainer = "container:GPhotos.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -42,9 +56,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "DF3C8641230AA4F900F7088A"
-            BuildableName = "GPhotos.framework"
-            BlueprintName = "GPhotos"
+            BlueprintIdentifier = "607FACCF1AFB9204008FA782"
+            BuildableName = "GPhotos_Example.app"
+            BlueprintName = "GPhotos_Example"
             ReferencedContainer = "container:GPhotos.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -61,15 +75,16 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "DF3C8641230AA4F900F7088A"
-            BuildableName = "GPhotos.framework"
-            BlueprintName = "GPhotos"
+            BlueprintIdentifier = "607FACCF1AFB9204008FA782"
+            BuildableName = "GPhotos_Example.app"
+            BlueprintName = "GPhotos_Example"
             ReferencedContainer = "container:GPhotos.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -79,15 +94,16 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "DF3C8641230AA4F900F7088A"
-            BuildableName = "GPhotos.framework"
-            BlueprintName = "GPhotos"
+            BlueprintIdentifier = "607FACCF1AFB9204008FA782"
+            BuildableName = "GPhotos_Example.app"
+            BlueprintName = "GPhotos_Example"
             ReferencedContainer = "container:GPhotos.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

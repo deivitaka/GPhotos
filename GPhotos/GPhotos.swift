@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import CoreData
 import GTMAppAuth
 import AppAuth
 
@@ -19,7 +18,6 @@ public class GPhotos {
     
     internal static var initialized = false
     public static var isAuthorized: Bool { get {
-        log.d ("Token: " + Strings.photosAccessToken)
         return !Strings.photosAccessToken.isEmpty
     }}
     
@@ -32,8 +30,11 @@ public class GPhotos {
         configuration = GTMAppAuthFetcherAuthorization.configurationForGoogle()
     }
     
-    public static func authorize(with scopes: [AuthScope]? = nil, completion: ((Bool, Error?)->())? = nil) {
+    public static func authorize(with scopes: Set<AuthScope> = [.openId], completion: ((Bool, Error?)->())? = nil) {
         var success = false
+        let redirectUrl = Google.urls.redirect!
+        var scopes = scopes
+        scopes.insert(.openId)
         
         guard let config = configuration else {
             log.e("'GPhotos.config()' is not called, or sothething has failed in the process.")
@@ -47,15 +48,9 @@ public class GPhotos {
             return
         }
         
-        let redirectUrl = Google.urls.redirect!
-        var scopes = scopes?.map({ $0.rawValue }) ?? []
-        
-        if !scopes.contains(OIDScopeOpenID) { scopes.append(OIDScopeOpenID) }
-        if !scopes.contains(OIDScopeProfile) { scopes.append(OIDScopeProfile) }
-        
         let request = OIDAuthorizationRequest(configuration: config,
                                               clientId: Google.info.clientId,
-                                              scopes: scopes,
+                                              scopes: scopes.map({ $0.rawValue }),
                                               redirectURL: redirectUrl,
                                               responseType: OIDResponseTypeCode,
                                               additionalParameters: [:])
