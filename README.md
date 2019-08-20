@@ -1,5 +1,6 @@
 # GPhotos
 
+[![CI Status](https://img.shields.io/travis/deivitaka/GPhotos.svg?style=flat)](https://travis-ci.org/deivitaka/GPhotos)
 [![Version](https://img.shields.io/cocoapods/v/GPhotos.svg?style=flat)](https://cocoapods.org/pods/GPhotos)
 [![License](https://img.shields.io/cocoapods/l/GPhotos.svg?style=flat)](https://cocoapods.org/pods/GPhotos)
 [![Platform](https://img.shields.io/cocoapods/p/GPhotos.svg?style=flat)](https://cocoapods.org/pods/GPhotos)
