@@ -20,6 +20,8 @@ internal var topVC: UIViewController? = {
     }
     return nil
 }()
+
+internal var config = Config()
 internal var defaults = UserDefaults.standard
 
 //MARK: DispatchQueue
@@ -29,6 +31,13 @@ func background(_ execute: @escaping (()->Void)) {
 }
 
 //MARK: Structs
+
+public struct Config {
+    public init() {}
+    
+    internal var refreshTokenTimeout = 600
+    public var printLogs = true
+}
 
 internal struct Strings {
     private init() {}
@@ -48,6 +57,8 @@ internal struct Google {
         private init() {}
         
         static let redirect = URL(string: "\(info.reversedClientId):/oauthredirect")
+        static let authorization = URL(string: "https://accounts.google.com/o/oauth2/v2/auth")!
+        static let token = URL(string: "https://www.googleapis.com/oauth2/v4/token")!
     }
     
     struct info {
@@ -66,11 +77,17 @@ internal struct Google {
         return NSDictionary()
     }()
 
+    static internal var currentScopes: [String] = {
+        return (GPhotos.authorization?.authState.scope ?? "")
+            .split(separator: " ")
+            .map({ String($0) })
+    }()
 }
 
 internal struct log {
     
     static func d(_ messages: Any...) {
+        if !config.printLogs { return }
         let message = messages
             .map({ String(describing: $0) })
             .joined()

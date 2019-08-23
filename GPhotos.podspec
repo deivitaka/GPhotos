@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name             = 'GPhotos'
-    s.version          = '0.1.2'
+    s.version          = '0.2.0'
     s.summary          = 'A wrapper around the Google Photos API for iOS.'
     s.description      = <<-DESC
     I wanted to consume the Google Photos API in Swift but at the time of writing there is no framework
@@ -22,4 +22,7 @@ Pod::Spec.new do |s|
     
     s.dependency 'GTMAppAuth', '~> 1.0.0'
     s.dependency 'AppAuth', '~> 1.0'
+    s.dependency 'Moya', '~> 13.0'
+    s.dependency 'ObjectMapper', '~> 3.4'
+
 end

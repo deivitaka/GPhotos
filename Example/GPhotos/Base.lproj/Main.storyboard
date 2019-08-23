@@ -13,26 +13,13 @@
         <!--View Controller-->
         <scene sceneID="cIv-ld-F8o">
             <objects>
-                <viewController id="46m-1F-Foq" customClass="ViewController" customModule="GPhotosExample_iOS" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="46m-1F-Foq" customClass="ViewController" customModule="GPhotos_Example" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="WAE-Q7-pO5">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="exF-oB-uxl">
-                                <rect key="frame" x="168.5" y="318.5" width="38" height="30"/>
-                                <state key="normal" title="Login"/>
-                            </button>
-                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstItem="exF-oB-uxl" firstAttribute="centerX" secondItem="WAE-Q7-pO5" secondAttribute="centerX" id="9ND-rK-0VE"/>
-                            <constraint firstItem="exF-oB-uxl" firstAttribute="centerY" secondItem="WAE-Q7-pO5" secondAttribute="centerY" id="eAK-fV-6Py"/>
-                        </constraints>
                         <viewLayoutGuide key="safeArea" id="x4s-r3-u4r"/>
                     </view>
-                    <connections>
-                        <outlet property="actionB" destination="exF-oB-uxl" id="O3e-HW-8II"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="E5i-1q-UNc" sceneMemberID="firstResponder"/>
             </objects>

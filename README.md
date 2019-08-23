@@ -12,21 +12,29 @@ So why not share my own take?
 This project will gradually implement all endpoints.
 
 - [x] Authentication
+
 - [ ] Albums
-    - [ ] list
-    - [ ] get
-    - [ ] create
-    - [ ] addEnrichment
+    - [ ] addEnrichment - Adds an enrichment at a specified position in a defined album.
+    - [ ] batchAddMediaItems - Adds one or more media items in a user's Google Photos library to an album.
+    - [ ] batchRemoveMediaItems - Removes one or more media items from a specified album.
+    - [ ] create - Creates an album in a user's Google Photos library.
+    - [ ] get - Returns the album based on the specified albumId.
+    - [ ] list - Lists all albums shown to a user in the Albums tab of the Google Photos app.
+    - [ ] share - Marks an album as shared and accessible to other users.
+    - [ ] unshare - Marks a previously shared album as private.
+
 - [ ] Shared albums
-    - [ ] list
-    - [ ] join
+    - [ ] get - Returns the album based on the specified shareToken.
+    - [ ] join - Joins a shared album on behalf of the Google Photos user.
+    - [ ] leave - Leaves a previously-joined shared album on behalf of the Google Photos user.
+    - [ ] list - Lists all shared albums available in the Sharing tab of the user's Google Photos app.
+
 - [ ] MediaItems
-    - [ ] list
-    - [ ] get
-    - [ ] upload
-    - [ ] search
-        - [ ] with album id
-        - [ ] with filters
+    - [ ] batchCreate - Creates one or more media items in a user's Google Photos library.
+    - [ ] batchGet - Returns the list of media items for the specified media item identifiers.
+    - [x] get - Returns the media item for the specified media item identifier.
+    - [x] list - List all media items from a user's Google Photos library.
+    - [x] search - Searches for media items in a user's Google Photos library.
 
 ## Example
 
@@ -44,7 +52,9 @@ In `AppDelegate.swift` configure GPhotos when the application finishes launching
 
 ```swift
 func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-    GPhotos.config()
+    var config = Config()
+    config.printLogs = false
+    GPhotos.initialize(with: config)
     // Other configs
 }
 ```
@@ -63,11 +73,28 @@ func application(_ app: UIApplication, open url: URL, options: [UIApplication.Op
 
 ### Authentication
 
-- `GPhotos.isAuthorized` will return true if a user is already authorized. Check before calling `GPhotos.authorize()`, unless you want to switch users, or add new scopes.
+- `GPhotos.isAuthorized` will return true if a user is already authorized.
 
 - `GPhotos.logout()` clears the session information and invalidates any token saved.
 
-- `GPhotos.authorize()` by default starts the authentication process with `openid` scope. As per Google recommendation, you should gradually add scopes when you need to use them, not on the first run. The method will return a boolean indicating the success status, and an error if any.
+- `GPhotos.authorize(with scopes:)` by default starts the authentication process with `openid` scope. Will be executed only if there are new scopes. As per Google recommendation, you should gradually add scopes when you need to use them, not on the first run. The method will return a boolean indicating the success status, and an error if any.
+
+- `GPhotos.switchAccount(with scopes:)` by default starts the authentication process with `openid` scope. Will ignore current authentication scopes. The method will return a boolean indicating the success status, and an error if any.
+
+### MediaItems
+
+Save an instance of  `MediaItems` to be able to use pagination.
+
+#### list
+- `GPhotos.list()` loads sequential pages of items every time it is called.
+- `GPhotos.reloadList()` loads always the first page.
+
+#### get
+- `GPhotos.get(id:)` returns the `MediaItem` for the provided id.
+
+#### search
+- `GPhotos.search(with request:)` loads sequential pages of items every time it is called. Results are based on filters in the request. If no filters are applied it will return the same results as `list()`
+- `GPhotos.reloadSearch(with request:)` loads always the first page.
 
 ## License
 
