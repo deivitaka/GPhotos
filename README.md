@@ -31,7 +31,7 @@ This project will gradually implement all endpoints.
 
 - [ ] MediaItems
     - [ ] batchCreate - Creates one or more media items in a user's Google Photos library.
-    - [ ] batchGet - Returns the list of media items for the specified media item identifiers.
+    - [x] batchGet - Returns the list of media items for the specified media item identifiers.
     - [x] get - Returns the media item for the specified media item identifier.
     - [x] list - List all media items from a user's Google Photos library.
     - [x] search - Searches for media items in a user's Google Photos library.
@@ -46,9 +46,9 @@ To install through CocoaPods add `pod 'GPhotos'` to your Podfile and run `pod in
 
 ## Setup
 
-Setup a OAuth 2.0 client ID as described [here](https://support.google.com/cloud/answer/6158849?hl=en&ref_topic=3473162#), download the `.plist` file and add it to the project.
+- Setup a OAuth 2.0 client ID as described [here](https://support.google.com/cloud/answer/6158849?hl=en&ref_topic=3473162#), download the `.plist` file and add it to the project.
 
-In `AppDelegate.swift` configure GPhotos when the application finishes launching
+- In `AppDelegate.swift` configure GPhotos when the application finishes launching
 
 ```swift
 func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -59,7 +59,7 @@ func application(_ application: UIApplication, didFinishLaunchingWithOptions lau
 }
 ```
 
-To handle redirects during the authorization process add or edit the following method.
+- To handle redirects during the authorization process add or edit the following method.
 
 ```swift
 func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
@@ -86,15 +86,16 @@ func application(_ app: UIApplication, open url: URL, options: [UIApplication.Op
 Save an instance of  `MediaItems` to be able to use pagination.
 
 #### list
-- `GPhotos.list()` loads sequential pages of items every time it is called.
-- `GPhotos.reloadList()` loads always the first page.
+- `list()` loads sequential pages of items every time it is called.
+- `reloadList()` loads always the first page.
 
 #### get
-- `GPhotos.get(id:)` returns the `MediaItem` for the provided id.
+- `get(id:)` returns the `MediaItem` for the provided id.
+- `getBatch(ids:)` returns the `MediaItems` for the provided array of ids.
 
 #### search
-- `GPhotos.search(with request:)` loads sequential pages of items every time it is called. Results are based on filters in the request. If no filters are applied it will return the same results as `list()`
-- `GPhotos.reloadSearch(with request:)` loads always the first page.
+- `search(with request:)` loads sequential pages of items every time it is called. Results are based on filters in the request. If no filters are applied it will return the same results as `list()`
+- `reloadSearch(with request:)` loads always the first page.
 
 ## License
 

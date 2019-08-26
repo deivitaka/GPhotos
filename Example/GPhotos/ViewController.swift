@@ -15,7 +15,7 @@ class ViewController: UIViewController {
     var stackView: UIStackView!
     
     fileprivate var mediaItems = MediaItems()
-    fileprivate var lastId: String? = nil
+    fileprivate var items = [MediaItem]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,7 +50,7 @@ extension ViewController {
             
             self.mediaItems.list { items in
                 print (items.map({ $0.id }).sorted())
-                self.lastId = items.last?.id
+                self.items = items
             }
         }
     }
@@ -64,7 +64,7 @@ extension ViewController {
             
             self.mediaItems.reloadList { items in
                 print (items.map({ $0.id }).sorted())
-                self.lastId = items.last?.id
+                self.items = items
             }
         }
     }
@@ -84,7 +84,7 @@ extension ViewController {
             let request = MediaItemsSearch.Request(filters: filter)
             self.mediaItems.search(with: request) { items in
                 print (items.map({ $0.id }).sorted())
-                self.lastId = items.last?.id
+                self.items = items
             }
         }
     }
@@ -104,7 +104,7 @@ extension ViewController {
             let request = MediaItemsSearch.Request(filters: filter)
             self.mediaItems.reloadSearch(with: request) { items in
                 print (items.map({ $0.id }).sorted())
-                self.lastId = items.last?.id
+                self.items = items
             }
         }
     }
@@ -116,8 +116,32 @@ extension ViewController {
                 return
             }
             
-            self.mediaItems.get(id: self.lastId ?? "", completion: { (item) in
+            guard let last = self.items.last else {
+                print ("List or search first")
+                return
+            }
+            
+            self.mediaItems.get(id: last.id, completion: { (item) in
                 print (item?.id)
+            })
+        }
+    }
+    
+    @objc func getBatchMediaItems() {
+        GPhotos.authorize(with: [.readAndAppend]) { (success, error) in
+            guard success else {
+                print (error?.localizedDescription)
+                return
+            }
+            
+            guard self.items.count >= 3 else {
+                print ("List or search first")
+                return
+            }
+            
+            let ids = self.items.suffix(3).map({ $0.id })
+            self.mediaItems.getBatch(ids: ids, completion: { (items) in
+                print (items.map({ $0.id }).sorted())
             })
         }
     }
@@ -157,6 +181,7 @@ private extension ViewController {
             addButton(title: "Reload search", action: #selector(reloadSearch))
             addSeparator()
             addButton(title: "Get last item", action: #selector(getMediaItem))
+            addButton(title: "Get last 3 items", action: #selector(getBatchMediaItems))
             addSeparator()
             view.addSubview(stackView)
             

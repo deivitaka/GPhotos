@@ -13,7 +13,7 @@ import ObjectMapper
 internal enum MediaItemsService {
     case list(req: MediaItemsList.Request)
     case get(id: String)
-    case batchGet
+    case batchGet(req: MediaItemsBatchGet.Request)
     case search(req: MediaItemsSearch.Request)
 }
 
@@ -46,8 +46,11 @@ extension MediaItemsService : GPhotosService {
         switch self {
         case .list(let req):
             return get(req)
-        case .get,
-             .batchGet:
+        case .batchGet(let req):
+            let encoding = URLEncoding.init(destination: .queryString, arrayEncoding: .noBrackets, boolEncoding: .numeric)
+            return .requestParameters(parameters: ["mediaItemIds":req.mediaItemIds],
+                                      encoding: encoding)
+        case .get:
             return .requestPlain
         case .search(let req):
             return post(req)

@@ -139,4 +139,27 @@ public extension MediaItems {
         }
     }
     
+    func getBatch(ids: [String], completion: @escaping (([MediaItem])->())) {
+        GPhotos.refreshTokenIfNeeded() {
+            let req = MediaItemsBatchGet.Request()
+            req.mediaItemIds = ids
+            GPhotosApi.mediaItems.request(.batchGet(req: req)) { (result) in
+                switch result {
+                case let .success(res):
+                    guard let dict = GPhotosApi.handle(response: res) else {
+                        completion([])
+                        return
+                    }
+                    let res = MediaItemsBatchGet.Response(JSON: dict)
+                    let items = res?.mediaItemResults.compactMap({ $0.mediaItem })
+                    completion(items ?? [])
+                    
+                case let .failure(error):
+                    GPhotosApi.handle(error: error)
+                    completion([])
+                }
+            }
+        }
+    }
+    
 }
