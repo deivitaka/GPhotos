@@ -15,17 +15,15 @@ class ViewController: UIViewController {
     var stackView: UIStackView!
     
     fileprivate var mediaItems = MediaItems()
+    fileprivate var albums = Albums()
+    
     fileprivate var items = [MediaItem]()
+    fileprivate var albumList = [Album]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
     }
-
-}
-
-// Actions
-extension ViewController {
     
     @objc func loginButtonClicked() {
         loginB.isEnabled = false
@@ -40,6 +38,11 @@ extension ViewController {
             }
         }
     }
+
+}
+
+// Media Items
+extension ViewController {
     
     @objc func listItems() {
         GPhotos.authorize(with: [.readAndAppend]) { (success, error) in
@@ -148,6 +151,57 @@ extension ViewController {
     
 }
 
+// Albums
+extension ViewController {
+    
+    @objc func listAlbums() {
+        GPhotos.authorize(with: [.readAndAppend]) { (success, error) in
+            guard success else {
+                print (error?.localizedDescription)
+                return
+            }
+            
+            self.albums.list { items in
+                print (items.map({ $0.id }).sorted())
+                self.albumList = items
+            }
+        }
+    }
+    
+    @objc func reloadAlbumsList() {
+        GPhotos.authorize(with: [.readAndAppend]) { (success, error) in
+            guard success else {
+                print (error?.localizedDescription)
+                return
+            }
+
+            self.albums.reloadList { items in
+                print (items.map({ $0.id }).sorted())
+                self.albumList = items
+            }
+        }
+    }
+    
+    @objc func getAlbum() {
+        GPhotos.authorize(with: [.readAndAppend]) { (success, error) in
+            guard success else {
+                print (error?.localizedDescription)
+                return
+            }
+
+            guard let last = self.albumList.last else {
+                print ("List first")
+                return
+            }
+
+            self.albums.get(id: last.id, completion: { (item) in
+                print (item?.id)
+            })
+        }
+    }
+
+}
+
 private extension ViewController {
     
     func setupView() {
@@ -166,14 +220,7 @@ private extension ViewController {
             NSLayoutConstraint.activate([ loginConstrY, loginConstrX ])
         }
         
-        func setupStackView() {
-            stackView = UIStackView()
-            stackView.axis = .vertical
-            stackView.distribution = .fill
-            stackView.alignment = .fill
-            stackView.spacing = 10
-            stackView.translatesAutoresizingMaskIntoConstraints = false
-            
+        func addItems() {
             addButton(title: "List media items", action: #selector(listItems))
             addButton(title: "Reload list", action: #selector(reloadList))
             addSeparator()
@@ -183,6 +230,23 @@ private extension ViewController {
             addButton(title: "Get last item", action: #selector(getMediaItem))
             addButton(title: "Get last 3 items", action: #selector(getBatchMediaItems))
             addSeparator()
+            addSeparator()
+            addButton(title: "List albums", action: #selector(listAlbums))
+            addButton(title: "Reload list", action: #selector(reloadAlbumsList))
+            addSeparator()
+            addButton(title: "Get last album", action: #selector(getAlbum))
+            addSeparator()
+        }
+        
+        func setupStackView() {
+            stackView = UIStackView()
+            stackView.axis = .vertical
+            stackView.distribution = .fill
+            stackView.alignment = .fill
+            stackView.spacing = 10
+            stackView.translatesAutoresizingMaskIntoConstraints = false
+            
+            addItems()
             view.addSubview(stackView)
             
             let svConstrLeft = NSLayoutConstraint(item: stackView!, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1, constant: 50)

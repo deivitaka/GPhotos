@@ -17,6 +17,7 @@ internal struct GPhotosApi {
     ]
     
     static let mediaItems = MoyaProvider<MediaItemsService>(plugins: GPhotosApi.plugins)
+    static let albums = MoyaProvider<AlbumsService>(plugins: GPhotosApi.plugins)
     
     static func handle(response: Response) -> [String:Any]? {
         do {

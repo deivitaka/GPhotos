@@ -18,8 +18,8 @@ This project will gradually implement all endpoints.
     - [ ] batchAddMediaItems - Adds one or more media items in a user's Google Photos library to an album.
     - [ ] batchRemoveMediaItems - Removes one or more media items from a specified album.
     - [ ] create - Creates an album in a user's Google Photos library.
-    - [ ] get - Returns the album based on the specified albumId.
-    - [ ] list - Lists all albums shown to a user in the Albums tab of the Google Photos app.
+    - [x] get - Returns the album based on the specified albumId.
+    - [x] list - Lists all albums shown to a user in the Albums tab of the Google Photos app.
     - [ ] share - Marks an album as shared and accessible to other users.
     - [ ] unshare - Marks a previously shared album as private.
 
@@ -81,13 +81,23 @@ func application(_ app: UIApplication, open url: URL, options: [UIApplication.Op
 
 - `GPhotos.switchAccount(with scopes:)` by default starts the authentication process with `openid` scope. Will ignore current authentication scopes. The method will return a boolean indicating the success status, and an error if any.
 
-### MediaItems
+### Albums
 
-Save an instance of  `MediaItems` to be able to use pagination.
+Save an instance of `Albums` to be able to use pagination.
 
 #### list
 - `list()` loads sequential pages of items every time it is called.
 - `reloadList()` loads always the first page.
+
+#### get
+- `get(id:)` returns the `Album` for the provided id.
+
+### MediaItems
+
+Save an instance of `MediaItems` to be able to use pagination.
+
+#### list
+`list()` and `reloadList()` have the same use as in Albums
 
 #### get
 - `get(id:)` returns the `MediaItem` for the provided id.
