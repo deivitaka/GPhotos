@@ -14,9 +14,6 @@ class ViewController: UIViewController {
     var loginB: UIButton!
     var stackView: UIStackView!
     
-    fileprivate var mediaItems = MediaItems()
-    fileprivate var albums = Albums()
-    
     fileprivate var items = [MediaItem]()
     fileprivate var albumList = [Album]()
     
@@ -31,8 +28,11 @@ class ViewController: UIViewController {
             GPhotos.logout()
             self.loginB.isEnabled = true
             self.updateLoginButton()
+            self.stackView.isHidden = true
         } else {
             GPhotos.authorize() { (success, error) in
+                if let error = error { print (error.localizedDescription) }
+                else { self.stackView.isHidden = false }
                 self.updateLoginButton()
                 self.loginB.isEnabled = true
             }
@@ -45,108 +45,66 @@ class ViewController: UIViewController {
 extension ViewController {
     
     @objc func listItems() {
-        GPhotos.authorize(with: [.readAndAppend]) { (success, error) in
-            guard success else {
-                print (error?.localizedDescription)
-                return
-            }
-            
-            self.mediaItems.list { items in
-                print (items.map({ $0.id }).sorted())
-                self.items = items
-            }
+        GPhotosApi.mediaItems.list { items in
+            print (items.map({ $0.id }).sorted())
+            self.items = items
         }
     }
     
     @objc func reloadList() {
-        GPhotos.authorize(with: [.readAndAppend]) { (success, error) in
-            guard success else {
-                print (error?.localizedDescription)
-                return
-            }
-            
-            self.mediaItems.reloadList { items in
-                print (items.map({ $0.id }).sorted())
-                self.items = items
-            }
+        GPhotosApi.mediaItems.reloadList { items in
+            print (items.map({ $0.id }).sorted())
+            self.items = items
         }
     }
     
     @objc func searchItems() {
-        GPhotos.authorize(with: [.readAndAppend]) { (success, error) in
-            guard success else {
-                print (error?.localizedDescription)
-                return
-            }
-            
-            // Search photos made today
-            let filter = Filters()
-            filter.dateFilter = DateFilter(with: [
-                DateFilter.Date(from: Date())
-                ])
-            let request = MediaItemsSearch.Request(filters: filter)
-            self.mediaItems.search(with: request) { items in
-                print (items.map({ $0.id }).sorted())
-                self.items = items
-            }
+        // Search photos made today
+        let filter = Filters()
+        filter.dateFilter = DateFilter(with: [
+            DateFilter.Date(from: Date())
+            ])
+        let request = MediaItemsSearch.Request(filters: filter)
+        GPhotosApi.mediaItems.search(with: request) { items in
+            print (items.map({ $0.id }).sorted())
+            self.items = items
         }
     }
     
     @objc func reloadSearch() {
-        GPhotos.authorize(with: [.readAndAppend]) { (success, error) in
-            guard success else {
-                print (error?.localizedDescription)
-                return
-            }
-            
-            // Search photos made today
-            let filter = Filters()
-            filter.dateFilter = DateFilter(with: [
-                DateFilter.Date(from: Date())
-                ])
-            let request = MediaItemsSearch.Request(filters: filter)
-            self.mediaItems.reloadSearch(with: request) { items in
-                print (items.map({ $0.id }).sorted())
-                self.items = items
-            }
+        // Search photos made today
+        let filter = Filters()
+        filter.dateFilter = DateFilter(with: [
+            DateFilter.Date(from: Date())
+            ])
+        let request = MediaItemsSearch.Request(filters: filter)
+        GPhotosApi.mediaItems.reloadSearch(with: request) { items in
+            print (items.map({ $0.id }).sorted())
+            self.items = items
         }
     }
     
     @objc func getMediaItem() {
-        GPhotos.authorize(with: [.readAndAppend]) { (success, error) in
-            guard success else {
-                print (error?.localizedDescription)
-                return
-            }
-            
-            guard let last = self.items.last else {
-                print ("List or search first")
-                return
-            }
-            
-            self.mediaItems.get(id: last.id, completion: { (item) in
-                print (item?.id)
-            })
+        guard let last = self.items.last else {
+            print ("List or search first")
+            return
         }
+        
+        GPhotosApi.mediaItems.get(id: last.id, completion: { (item) in
+            print (item?.id)
+        })
     }
     
     @objc func getBatchMediaItems() {
-        GPhotos.authorize(with: [.readAndAppend]) { (success, error) in
-            guard success else {
-                print (error?.localizedDescription)
-                return
-            }
-            
-            guard self.items.count >= 3 else {
-                print ("List or search first")
-                return
-            }
-            
-            let ids = self.items.suffix(3).map({ $0.id })
-            self.mediaItems.getBatch(ids: ids, completion: { (items) in
-                print (items.map({ $0.id }).sorted())
-            })
+        guard self.items.count >= 3 else {
+            print ("List or search first")
+            return
         }
+        
+        let ids = self.items.suffix(3).map({ $0.id })
+        GPhotosApi.mediaItems.getBatch(ids: ids, completion: { (items) in
+            print (items.map({ $0.id }).sorted())
+        })
     }
     
 }
@@ -155,51 +113,49 @@ extension ViewController {
 extension ViewController {
     
     @objc func listAlbums() {
-        GPhotos.authorize(with: [.readAndAppend]) { (success, error) in
-            guard success else {
-                print (error?.localizedDescription)
-                return
-            }
-            
-            self.albums.list { items in
-                print (items.map({ $0.id }).sorted())
-                self.albumList = items
-            }
+        GPhotosApi.albums.list { items in
+            print (items.toJSONString(prettyPrint: true))
+            self.albumList = items
         }
     }
     
     @objc func reloadAlbumsList() {
-        GPhotos.authorize(with: [.readAndAppend]) { (success, error) in
-            guard success else {
-                print (error?.localizedDescription)
-                return
-            }
-
-            self.albums.reloadList { items in
-                print (items.map({ $0.id }).sorted())
-                self.albumList = items
-            }
+        GPhotosApi.albums.reloadList { items in
+            print (items.map({ $0.id }).sorted())
+            self.albumList = items
         }
     }
     
     @objc func getAlbum() {
-        GPhotos.authorize(with: [.readAndAppend]) { (success, error) in
-            guard success else {
-                print (error?.localizedDescription)
-                return
-            }
-
-            guard let last = self.albumList.last else {
-                print ("List first")
-                return
-            }
-
-            self.albums.get(id: last.id, completion: { (item) in
-                print (item?.id)
-            })
+        guard let last = self.albumList.last else {
+            print ("List first")
+            return
         }
+
+        GPhotosApi.albums.get(id: last.id, completion: { (item) in
+            print (item?.id)
+        })
     }
 
+}
+
+// Shared Albums
+extension ViewController {
+    
+    @objc func listSharedAlbums() {
+        GPhotosApi.sharedAlbums.list { items in
+            print (items.toJSONString(prettyPrint: true))
+            self.albumList = items
+        }
+    }
+    
+    @objc func reloadSharedAlbumsList() {
+        GPhotosApi.sharedAlbums.reloadList { items in
+            print (items.map({ $0.id }).sorted())
+            self.albumList = items
+        }
+    }
+    
 }
 
 private extension ViewController {
@@ -214,10 +170,10 @@ private extension ViewController {
             view.addSubview(loginB)
             updateLoginButton()
             
-            let loginConstrY = NSLayoutConstraint(item: loginB!, attribute: .centerY, relatedBy: .equal, toItem: view, attribute: .centerY, multiplier: 0.6, constant: 0)
+            let loginConstrTop = NSLayoutConstraint(item: loginB!, attribute: .top, relatedBy: .equal, toItem: view, attribute: .topMargin, multiplier: 1, constant: 10)
             let loginConstrX = NSLayoutConstraint(item: loginB!, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1, constant: 0)
             
-            NSLayoutConstraint.activate([ loginConstrY, loginConstrX ])
+            NSLayoutConstraint.activate([ loginConstrTop, loginConstrX ])
         }
         
         func addItems() {
@@ -236,6 +192,9 @@ private extension ViewController {
             addSeparator()
             addButton(title: "Get last album", action: #selector(getAlbum))
             addSeparator()
+            addSeparator()
+            addButton(title: "List shared albums", action: #selector(listSharedAlbums))
+            addButton(title: "Reload list", action: #selector(reloadSharedAlbumsList))
         }
         
         func setupStackView() {
@@ -245,6 +204,7 @@ private extension ViewController {
             stackView.alignment = .fill
             stackView.spacing = 10
             stackView.translatesAutoresizingMaskIntoConstraints = false
+            stackView.isHidden = !GPhotos.isAuthorized
             
             addItems()
             view.addSubview(stackView)
@@ -273,7 +233,7 @@ private extension ViewController {
     
     func addSeparator() {
         let v = UIView()
-        v.backgroundColor = #colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1)
+        v.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
         stackView.addArrangedSubview(v)
         
         let vHeight = NSLayoutConstraint(item: v, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 1)

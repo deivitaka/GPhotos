@@ -8,9 +8,9 @@
 import Foundation
 import Moya
 
-public class MediaItems {
+public class MediaItems : GPhotosResource {
     
-    public init() {}
+    fileprivate let api = MoyaProvider<MediaItemsService>(plugins: GPhotosApi.plugins)
     
     // MARK: List
     private struct List {
@@ -38,16 +38,12 @@ public extension MediaItems {
             return
         }
         
-        if !GPhotos.checkScopes(with: [.readAndAppend, .readOnly, .readDevData]) {
-            completion([])
-            return
-        }
-        
-        GPhotos.refreshTokenIfNeeded() {
-            GPhotosApi.mediaItems.request(.list(req: self.currentList.request)) { (result) in
+        let requiredScopes: Set<AuthScope> = [.readOnly, .readDevData]
+        autoAuthorize(requiredScopes) {
+            self.api.request(.list(req: self.currentList.request)) { (result) in
                 switch result {
                 case let .success(res):
-                    guard let dict = GPhotosApi.handle(response: res) else {
+                    guard let dict = self.handle(response: res) else {
                         completion([])
                         return
                     }
@@ -57,7 +53,7 @@ public extension MediaItems {
                     completion(listRes?.mediaItems ?? [])
                     
                 case let .failure(error):
-                    GPhotosApi.handle(error: error)
+                    self.handle(error: error)
                     completion([])
                 }
             }
@@ -68,6 +64,7 @@ public extension MediaItems {
         currentList = List()
         list(completion: completion)
     }
+    
 }
 
 // MARK:- Search
@@ -84,16 +81,12 @@ public extension MediaItems {
             return
         }
         
-        if !GPhotos.checkScopes(with: [.readAndAppend, .readOnly, .readDevData]) {
-            completion([])
-            return
-        }
-        
-        GPhotos.refreshTokenIfNeeded() {
-            GPhotosApi.mediaItems.request(.search(req: self.currentSearch.request)) { (result) in
+        let requiredScopes: Set<AuthScope> = [.readOnly, .readDevData]
+        autoAuthorize(requiredScopes) {
+            self.api.request(.search(req: self.currentSearch.request)) { (result) in
                 switch result {
                 case let .success(res):
-                    guard let dict = GPhotosApi.handle(response: res) else {
+                    guard let dict = self.handle(response: res) else {
                         completion([])
                         return
                     }
@@ -103,7 +96,7 @@ public extension MediaItems {
                     completion(searchRes?.mediaItems ?? [])
                     
                 case let .failure(error):
-                    GPhotosApi.handle(error: error)
+                    self.handle(error: error)
                     completion([])
                 }
             }
@@ -120,11 +113,12 @@ public extension MediaItems {
 public extension MediaItems {
     
     func get(id: String, completion: @escaping ((MediaItem?)->())) {
-        GPhotos.refreshTokenIfNeeded() {
-            GPhotosApi.mediaItems.request(.get(id: id)) { (result) in
+        let requiredScopes: Set<AuthScope> = [.readOnly, .readDevData]
+        autoAuthorize(requiredScopes) {
+            self.api.request(.get(id: id)) { (result) in
                 switch result {
                 case let .success(res):
-                    guard let dict = GPhotosApi.handle(response: res) else {
+                    guard let dict = self.handle(response: res) else {
                         completion(nil)
                         return
                     }
@@ -132,7 +126,7 @@ public extension MediaItems {
                     completion(item)
                     
                 case let .failure(error):
-                    GPhotosApi.handle(error: error)
+                    self.handle(error: error)
                     completion(nil)
                 }
             }
@@ -140,13 +134,14 @@ public extension MediaItems {
     }
     
     func getBatch(ids: [String], completion: @escaping (([MediaItem])->())) {
-        GPhotos.refreshTokenIfNeeded() {
+        let requiredScopes: Set<AuthScope> = [.readOnly, .readDevData]
+        autoAuthorize(requiredScopes) {
             let req = MediaItemsBatchGet.Request()
             req.mediaItemIds = ids
-            GPhotosApi.mediaItems.request(.batchGet(req: req)) { (result) in
+            self.api.request(.batchGet(req: req)) { (result) in
                 switch result {
                 case let .success(res):
-                    guard let dict = GPhotosApi.handle(response: res) else {
+                    guard let dict = self.handle(response: res) else {
                         completion([])
                         return
                     }
@@ -155,7 +150,7 @@ public extension MediaItems {
                     completion(items ?? [])
                     
                 case let .failure(error):
-                    GPhotosApi.handle(error: error)
+                    self.handle(error: error)
                     completion([])
                 }
             }

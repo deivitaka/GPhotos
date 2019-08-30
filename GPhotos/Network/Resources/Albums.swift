@@ -8,9 +8,9 @@
 import Foundation
 import Moya
 
-public class Albums {
+public class Albums : GPhotosResource {
     
-    public init() {}
+    fileprivate let api = MoyaProvider<AlbumsService>(plugins: GPhotosApi.plugins)
     
     // MARK: List
     private struct List {
@@ -31,16 +31,12 @@ public extension Albums {
             return
         }
         
-        if !GPhotos.checkScopes(with: [.readAndAppend, .readOnly, .readDevData]) {
-            completion([])
-            return
-        }
-        
-        GPhotos.refreshTokenIfNeeded() {
-            GPhotosApi.albums.request(.list(req: self.currentList.request)) { (result) in
+        let requiredScopes: Set<AuthScope> = [.readOnly, .readDevData]
+        autoAuthorize(requiredScopes) {
+            self.api.request(.list(req: self.currentList.request)) { (result) in
                 switch result {
                 case let .success(res):
-                    guard let dict = GPhotosApi.handle(response: res) else {
+                    guard let dict = self.handle(response: res) else {
                         completion([])
                         return
                     }
@@ -50,7 +46,7 @@ public extension Albums {
                     completion(listRes?.albums ?? [])
                     
                 case let .failure(error):
-                    GPhotosApi.handle(error: error)
+                    self.handle(error: error)
                     completion([])
                 }
             }
@@ -68,11 +64,12 @@ public extension Albums {
 public extension Albums {
 
     func get(id: String, completion: @escaping ((Album?)->())) {
-        GPhotos.refreshTokenIfNeeded() {
-            GPhotosApi.albums.request(.get(id: id)) { (result) in
+        let requiredScopes: Set<AuthScope> = [.readOnly, .readDevData]
+        autoAuthorize(requiredScopes) {
+            self.api.request(.get(id: id)) { (result) in
                 switch result {
                 case let .success(res):
-                    guard let dict = GPhotosApi.handle(response: res) else {
+                    guard let dict = self.handle(response: res) else {
                         completion(nil)
                         return
                     }
@@ -80,7 +77,7 @@ public extension Albums {
                     completion(item)
 
                 case let .failure(error):
-                    GPhotosApi.handle(error: error)
+                    self.handle(error: error)
                     completion(nil)
                 }
             }

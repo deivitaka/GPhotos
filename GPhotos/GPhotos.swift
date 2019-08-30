@@ -38,7 +38,7 @@ public class GPhotos {
         refreshToken()
     }
     
-    /// By default starts the authentication process with openid scope. As per Google recommendation, you should gradually add scopes when you need to use them, not on the first run.The method will return a boolean indicating the success status, and an error if any.
+    /// By default starts the authentication process with openid scope. As per Google recommendation, you should gradually add scopes when you need to use them, not on the first run. The method will return a boolean indicating the success status, and an error if any.
     public static func authorize(with scopes: Set<AuthScope> = [.openId], completion: ((Bool, Error?)->())? = nil) {
         authorize(with: scopes, filterScopes: true, completion: completion)
     }
@@ -105,7 +105,6 @@ internal extension GPhotos {
     static func refreshToken(completion: (()->())? = nil) {
         // Do a dummy call and GTMSessionFetcherService will take care of refreshing the token
         background {
-            let now = Date().timeIntervalSinceReferenceDate
             self.fetcherService.authorizer = self.authorization
             if let tokenEndpoint = self.configuration?.tokenEndpoint {
                 let fetcher = self.fetcherService.fetcher(with: tokenEndpoint)
@@ -116,7 +115,8 @@ internal extension GPhotos {
                         self.authorization = nil
                     }
                     
-                    defaults.setValue(now, forKey: Strings.lastTokenRefresh)
+                    defaults.setValue(Date().timeIntervalSinceReferenceDate,
+                                      forKey: Strings.lastTokenRefresh)
                     completion?()
                 })
             }
@@ -125,29 +125,27 @@ internal extension GPhotos {
     }
     
     static func checkScopes(with scopes: [AuthScope]) -> Bool {
-        let minScopes = scopes.map({ $0.rawValue })
-        if !Google.currentScopes.contains(where: { (scope) -> Bool in
-            return minScopes.contains(scope)
-        }) {
+        if !Google.currentScopes.contains(where: { scopes.contains($0)}) {
             let scopes = scopes.map({ String(describing: $0) })
             log.e("Need to authorize with one of the scopes: \(scopes)")
             return false
         }
         return true
     }
-    
 }
 
 fileprivate extension GPhotos {
     
-    static func filter( scopes: inout Set<AuthScope>) {
+    static func filter(_ scopes: Set<AuthScope>) -> Set<AuthScope> {
+        var scopes = scopes
         var currentScopes = Google.currentScopes
         while !currentScopes.isEmpty {
             let scope = currentScopes.removeFirst()
-            if let index = scopes.firstIndex(where: { $0.rawValue == scope }) {
+            if let index = scopes.firstIndex(where: { $0 == scope }) {
                 scopes.remove(at: index)
             }
         }
+        return scopes
     }
     
     static func authorize(with scopes: Set<AuthScope> = [.openId], filterScopes: Bool, completion: ((Bool, Error?)->())? = nil) {
@@ -159,10 +157,16 @@ fileprivate extension GPhotos {
         scopes.insert(.openId)
         
         if filterScopes {
-            self.filter(scopes: &scopes)
-            if scopes.isEmpty {
+            // Will not lose current scopes that are authorized
+            let newScopes = self.filter(scopes)
+            if newScopes.isEmpty {
+                // All scopes are authorized, do nothing
                 completion?(true, nil)
                 return
+            } else {
+                // Some scopes are not authorized,
+                // request them all again
+                Google.currentScopes.forEach({ scopes.insert($0) })
             }
         }
         
@@ -176,12 +180,14 @@ fileprivate extension GPhotos {
         currentAuthFlow = OIDAuthState.authState(byPresenting: request, presenting: topVC!) { (state, error) in
             guard let state = state else {
                 self.authorization = nil
-                completion?(success, nil)
+                completion?(success, error)
                 return
             }
             
             let auth = GTMAppAuthFetcherAuthorization(authState: state)
             self.authorization = auth
+            defaults.setValue(Date().timeIntervalSinceReferenceDate,
+                              forKey: Strings.lastTokenRefresh)
             // Serialize to Keychain
             success = GTMAppAuthFetcherAuthorization.save(auth, toKeychainForName: Strings.keychainName)
             if !success { log.e("Could not save in keychain.") }

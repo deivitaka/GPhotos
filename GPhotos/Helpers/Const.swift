@@ -37,6 +37,8 @@ public struct Config {
     
     internal var refreshTokenTimeout = 600
     public var printLogs = true
+    public var printNetworkLogs = false
+    public var automaticallyAskPermissions = true
 }
 
 internal struct Strings {
@@ -77,11 +79,11 @@ internal struct Google {
         return NSDictionary()
     }()
 
-    static internal var currentScopes: [String] = {
+    static internal var currentScopes: [AuthScope] { get {
         return (GPhotos.authorization?.authState.scope ?? "")
             .split(separator: " ")
-            .map({ String($0) })
-    }()
+            .compactMap({ AuthScope(rawValue: String($0)) })
+    } }
 }
 
 internal struct log {

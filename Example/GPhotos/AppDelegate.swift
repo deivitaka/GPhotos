@@ -19,6 +19,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         var config = Config()
         config.printLogs = true
+        config.printNetworkLogs = true
+        config.automaticallyAskPermissions = true
         GPhotos.initialize(with: config)
         
         return true
