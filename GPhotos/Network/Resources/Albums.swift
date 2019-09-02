@@ -164,7 +164,7 @@ public extension Albums {
         }
     }
     
-    func addMediaItems(id: String, mediaIds: [String], options: SharedAlbumOptions? = nil, completion: @escaping ((Bool)->())) {
+    func addMediaItems(id: String, mediaIds: [String], completion: @escaping ((Bool)->())) {
         let requiredScopes: Set<AuthScope> = [.appendOnly, .sharing]
         autoAuthorize(requiredScopes) {
             let req = AlbumsAddMediaItems.Request()
@@ -188,7 +188,7 @@ public extension Albums {
         }
     }
     
-    func removeMediaItems(id: String, mediaIds: [String], options: SharedAlbumOptions? = nil, completion: @escaping ((Bool)->())) {
+    func removeMediaItems(id: String, mediaIds: [String], completion: @escaping ((Bool)->())) {
         let requiredScopes: Set<AuthScope> = [.sharing]
         autoAuthorize(requiredScopes) {
             let req = AlbumsAddMediaItems.Request()
@@ -212,7 +212,7 @@ public extension Albums {
         }
     }
     
-    func create(album: Album, options: SharedAlbumOptions? = nil, completion: @escaping ((Album?)->())) {
+    func create(album: Album, completion: @escaping ((Album?)->())) {
         let requiredScopes: Set<AuthScope> = [.appendOnly, .sharing]
         autoAuthorize(requiredScopes) {
             self.api.request(.create(album: album)) { (result) in

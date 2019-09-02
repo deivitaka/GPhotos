@@ -9,25 +9,25 @@ I wanted to consume the Google Photos API in Swift but at the time of writing th
 
 So why not share my own take?
 
-This project will gradually implement all endpoints.
+List of implemented methods:
 
 - [x] Authentication
 
-- [ ] Albums
-    - [ ] addEnrichment - Adds an enrichment at a specified position in a defined album.
-    - [ ] batchAddMediaItems - Adds one or more media items in a user's Google Photos library to an album.
-    - [ ] batchRemoveMediaItems - Removes one or more media items from a specified album.
-    - [ ] create - Creates an album in a user's Google Photos library.
+- [x] Albums
+    - [x] addEnrichment - Adds an enrichment at a specified position in a defined album.
+    - [x] batchAddMediaItems - Adds one or more media items in a user's Google Photos library to an album.
+    - [x] batchRemoveMediaItems - Removes one or more media items from a specified album.
+    - [x] create - Creates an album in a user's Google Photos library.
     - [x] get - Returns the album based on the specified albumId.
     - [x] list - Lists all albums shown to a user in the Albums tab of the Google Photos app.
-    - [ ] share - Marks an album as shared and accessible to other users.
-    - [ ] unshare - Marks a previously shared album as private.
+    - [x] share - Marks an album as shared and accessible to other users.
+    - [x] unshare - Marks a previously shared album as private.
 
-- [ ] Shared albums
-    - [ ] get - Returns the album based on the specified shareToken.
-    - [ ] join - Joins a shared album on behalf of the Google Photos user.
-    - [ ] leave - Leaves a previously-joined shared album on behalf of the Google Photos user.
-    - [ ] list - Lists all shared albums available in the Sharing tab of the user's Google Photos app.
+- [x] Shared albums
+    - [x] get - Returns the album based on the specified shareToken.
+    - [x] join - Joins a shared album on behalf of the Google Photos user.
+    - [x] leave - Leaves a previously-joined shared album on behalf of the Google Photos user.
+    - [x] list - Lists all shared albums available in the Sharing tab of the user's Google Photos app.
 
 - [ ] MediaItems
     - [ ] batchCreate - Creates one or more media items in a user's Google Photos library.
@@ -85,12 +85,27 @@ func application(_ app: UIApplication, open url: URL, options: [UIApplication.Op
 
 Save an instance of `Albums` to be able to use pagination.
 
+#### create
+- `create(album:)` returns the newly created album object
+
 #### list
 - `list()` loads sequential pages of items every time it is called.
 - `reloadList()` loads always the first page.
 
 #### get
 - `get(id:)` returns the `Album` for the provided id.
+
+#### sharing
+- `share(id:options:)` shares an album with the provided id with possible options and returns the `ShareInfo` of the album.
+- `unshare(id:)` returns a boolean indicating the success status.
+
+#### enrichments
+- `addEnrichment(id:enrichment:position)`
+
+#### media items
+Adding or removing items from an album only requires the set of media items ids.
+- `addMediaItems(id:mediaIds:)`
+- `removeMediaItems(id:mediaIds:)`
 
 ### MediaItems
 
