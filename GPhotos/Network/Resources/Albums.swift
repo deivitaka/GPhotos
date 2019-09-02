@@ -85,3 +85,151 @@ public extension Albums {
     }
 
 }
+
+// MARK:- Sharing
+public extension Albums {
+    
+    func share(id: String, options: SharedAlbumOptions? = nil, completion: @escaping ((ShareInfo?)->())) {
+        let requiredScopes: Set<AuthScope> = [.sharing]
+        autoAuthorize(requiredScopes) {
+            let req = AlbumsShare.Request()
+            req.id = id
+            req.sharedAlbumOptions = options
+            self.api.request(.share(req: req)) { (result) in
+                switch result {
+                case let .success(res):
+                    guard let dict = self.handle(response: res) else {
+                        completion(nil)
+                        return
+                    }
+                    let res = AlbumsShare.Response(JSON: dict)
+                    completion(res?.shareInfo)
+                    
+                case let .failure(error):
+                    self.handle(error: error)
+                    completion(nil)
+                }
+            }
+        }
+    }
+    
+    func unshare(id: String, completion: @escaping ((Bool)->())) {
+        let requiredScopes: Set<AuthScope> = [.sharing]
+        autoAuthorize(requiredScopes) {
+            self.api.request(.unshare(id: id)) { (result) in
+                switch result {
+                case let .success(res):
+                    guard let _ = self.handle(response: res),
+                        let _ = try? res.filterSuccessfulStatusCodes() else {
+                        completion(false)
+                        return
+                    }
+                    completion(true)
+                    
+                case let .failure(error):
+                    self.handle(error: error)
+                    completion(false)
+                }
+            }
+        }
+    }
+    
+}
+
+// MARK:- Other
+public extension Albums {
+    
+    func addEnrichment(id: String, enrichment: NewEnrichmentItem, position: AlbumPosition? = nil, options: SharedAlbumOptions? = nil, completion: @escaping ((String?)->())) {
+        let requiredScopes: Set<AuthScope> = [.appendOnly, .sharing]
+        autoAuthorize(requiredScopes) {
+            let req = AlbumsAddEnrichment.Request()
+            req.id = id
+            req.newEnrichmentItem = enrichment
+            req.albumPosition = position
+            self.api.request(.addEnrichment(req: req)) { (result) in
+                switch result {
+                case let .success(res):
+                    guard let dict = self.handle(response: res) else {
+                        completion(nil)
+                        return
+                    }
+                    let res = AlbumsAddEnrichment.Response(JSON: dict)
+                    completion(res?.enrichmentItem?.id)
+                    
+                case let .failure(error):
+                    self.handle(error: error)
+                    completion(nil)
+                }
+            }
+        }
+    }
+    
+    func addMediaItems(id: String, mediaIds: [String], options: SharedAlbumOptions? = nil, completion: @escaping ((Bool)->())) {
+        let requiredScopes: Set<AuthScope> = [.appendOnly, .sharing]
+        autoAuthorize(requiredScopes) {
+            let req = AlbumsAddMediaItems.Request()
+            req.id = id
+            req.mediaItemIds = mediaIds
+            self.api.request(.addMediaItems(req: req)) { (result) in
+                switch result {
+                case let .success(res):
+                    guard let _ = self.handle(response: res),
+                        let _ = try? res.filterSuccessfulStatusCodes() else {
+                            completion(false)
+                            return
+                    }
+                    completion(true)
+                    
+                case let .failure(error):
+                    self.handle(error: error)
+                    completion(false)
+                }
+            }
+        }
+    }
+    
+    func removeMediaItems(id: String, mediaIds: [String], options: SharedAlbumOptions? = nil, completion: @escaping ((Bool)->())) {
+        let requiredScopes: Set<AuthScope> = [.sharing]
+        autoAuthorize(requiredScopes) {
+            let req = AlbumsAddMediaItems.Request()
+            req.id = id
+            req.mediaItemIds = mediaIds
+            self.api.request(.removeMediaItems(req: req)) { (result) in
+                switch result {
+                case let .success(res):
+                    guard let _ = self.handle(response: res),
+                        let _ = try? res.filterSuccessfulStatusCodes() else {
+                            completion(false)
+                            return
+                    }
+                    completion(true)
+                    
+                case let .failure(error):
+                    self.handle(error: error)
+                    completion(false)
+                }
+            }
+        }
+    }
+    
+    func create(album: Album, options: SharedAlbumOptions? = nil, completion: @escaping ((Album?)->())) {
+        let requiredScopes: Set<AuthScope> = [.appendOnly, .sharing]
+        autoAuthorize(requiredScopes) {
+            self.api.request(.create(album: album)) { (result) in
+                switch result {
+                case let .success(res):
+                    guard let dict = self.handle(response: res) else {
+                        completion(nil)
+                        return
+                    }
+                    completion(Album(JSON: dict))
+                    
+                case let .failure(error):
+                    self.handle(error: error)
+                    completion(nil)
+                }
+            }
+        }
+    }
+    
+}
