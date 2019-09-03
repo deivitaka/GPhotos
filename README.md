@@ -12,6 +12,8 @@ So why not share my own take?
 List of implemented methods:
 
 - [x] Authentication
+    - [x] Auto-refresh token
+    - [x] Auto-request authorization
 
 - [x] Albums
     - [x] addEnrichment - Adds an enrichment at a specified position in a defined album.
@@ -29,8 +31,8 @@ List of implemented methods:
     - [x] leave - Leaves a previously-joined shared album on behalf of the Google Photos user.
     - [x] list - Lists all shared albums available in the Sharing tab of the user's Google Photos app.
 
-- [ ] MediaItems
-    - [ ] batchCreate - Creates one or more media items in a user's Google Photos library.
+- [x] MediaItems
+    - [x] batchCreate - Creates one or more media items in a user's Google Photos library.
     - [x] batchGet - Returns the list of media items for the specified media item identifiers.
     - [x] get - Returns the media item for the specified media item identifier.
     - [x] list - List all media items from a user's Google Photos library.
@@ -81,9 +83,10 @@ func application(_ app: UIApplication, open url: URL, options: [UIApplication.Op
 
 - `GPhotos.switchAccount(with scopes:)` by default starts the authentication process with `openid` scope. Will ignore current authentication scopes. The method will return a boolean indicating the success status, and an error if any.
 
-### Albums
+### Photos Api
+Save an instance of `GPhotosApi` to be able to use pagination between different features.
 
-Save an instance of `Albums` to be able to use pagination.
+### Albums
 
 #### create
 - `create(album:)` returns the newly created album object
@@ -109,10 +112,8 @@ Adding or removing items from an album only requires the set of media items ids.
 
 ### MediaItems
 
-Save an instance of `MediaItems` to be able to use pagination.
-
 #### list
-`list()` and `reloadList()` have the same use as in Albums
+- `list()` and `reloadList()` have the same use as in Albums
 
 #### get
 - `get(id:)` returns the `MediaItem` for the provided id.
@@ -121,6 +122,20 @@ Save an instance of `MediaItems` to be able to use pagination.
 #### search
 - `search(with request:)` loads sequential pages of items every time it is called. Results are based on filters in the request. If no filters are applied it will return the same results as `list()`
 - `reloadSearch(with request:)` loads always the first page.
+
+#### batchCreate
+- `upload(images:)` takes an array of `UIImage` and uploads them one by one to the user's library. These uploads will count towards storage in the user's Google Account.
+
+### SharedAlbums
+
+#### get
+- `get(token:)` returns the details of the shared album.
+
+#### joining
+- `join(token:)` and `leave(token:)` take the sharing token as argument and either join or leave the shared album if the token is correct.
+
+#### list
+- `list()` and `reloadList()` have the same use as in Albums
 
 ## License
 

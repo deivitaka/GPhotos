@@ -76,12 +76,4 @@ extension AlbumsService : GPhotosService {
             return .requestParameters(parameters: ["album" : album.toJSON()], encoding: JSONEncoding.default)
         }
     }
-    
-    private func get(_ req: Mappable) -> Task {
-        return .requestParameters(parameters: req.toJSON(), encoding: URLEncoding.default)
-    }
-    
-    private func post(_ req: Mappable) -> Task {
-        return .requestCompositeParameters(bodyParameters: req.toJSON(), bodyEncoding: JSONEncoding.default, urlParameters: [:])
-    }
 }

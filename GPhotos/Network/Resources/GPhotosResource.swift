@@ -9,11 +9,7 @@ import Foundation
 import Moya
 
 public class GPhotosResource {
-    
-//    fileprivate let api: MoyaProvider<GService>? = nil
-    
     internal init() {}
-    
 }
 
 internal extension GPhotosResource {

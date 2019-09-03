@@ -15,9 +15,28 @@ internal enum MediaItemsService {
     case get(id: String)
     case batchGet(req: MediaItemsBatchGet.Request)
     case search(req: MediaItemsSearch.Request)
+    case batchCreate(req: MediaItemsBatchCreate.Request)
+    case upload(image: Data, filename: String?)
 }
 
 extension MediaItemsService : GPhotosService {
+    var headers: [String: String]? {
+        switch self {
+        case .upload(_, let filename):
+            return [
+                "Content-type": "application/octet-stream",
+                "X-Goog-Upload-Protocol": "raw",
+                "X-Goog-Upload-File-Name": filename ?? "",
+                "Accept-Encoding": "gzip"
+            ]
+        default:
+            return [
+                "Content-type": "application/json",
+                "Accept-Encoding": "gzip"
+            ]
+        }
+    }
+    
     var path: String {
         switch self {
         case .list:
@@ -28,6 +47,10 @@ extension MediaItemsService : GPhotosService {
             return "/mediaItems:batchGet"
         case .search:
             return "/mediaItems:search"
+        case .batchCreate:
+            return "/mediaItems:batchCreate"
+        case .upload:
+            return "/uploads"
         }
     }
     
@@ -37,7 +60,9 @@ extension MediaItemsService : GPhotosService {
              .get,
              .batchGet:
             return .get
-        case .search:
+        case .search,
+             .batchCreate,
+             .upload:
             return .post
         }
     }
@@ -54,14 +79,11 @@ extension MediaItemsService : GPhotosService {
             return .requestPlain
         case .search(let req):
             return post(req)
+        case .batchCreate(let req):
+            return post(req)
+        case .upload(let image, _):
+            return .requestData(image)
         }
     }
-    
-    private func get(_ req: Mappable) -> Task {
-        return .requestParameters(parameters: req.toJSON(), encoding: URLEncoding.default)
-    }
-    
-    private func post(_ req: Mappable) -> Task {
-        return .requestCompositeParameters(bodyParameters: req.toJSON(), bodyEncoding: JSONEncoding.default, urlParameters: [:])
-    }
+
 }

@@ -158,3 +158,88 @@ public extension MediaItems {
     }
     
 }
+
+// MARK:- Batch create
+public extension MediaItems {
+    
+    internal func upload(image: UIImage, filename: String? = nil, completion: @escaping ((String?)->())) {
+        let requiredScopes: Set<AuthScope> = [.appendOnly]
+        guard let data = image.pngData() else {
+            completion(nil)
+            return
+        }
+        autoAuthorize(requiredScopes) {
+            self.api.request(.upload(image: data, filename: filename)) { (result) in
+                switch result {
+                case let .success(res):
+                    guard let res = try? res.filterSuccessfulStatusCodes(),
+                        let token = try? res.mapString() else {
+                            completion(nil)
+                            return
+                    }
+                    completion(token)
+                    
+                case let .failure(error):
+                    self.handle(error: error)
+                    completion(nil)
+                }
+            }
+        }
+    }
+    
+    internal func createBatch(with request: MediaItemsBatchCreate.Request, completion: @escaping (([MediaItemsBatchCreate.NewMediaItemResult])->())) {
+        let requiredScopes: Set<AuthScope> = [.appendOnly, .sharing]
+        autoAuthorize(requiredScopes) {
+            self.api.request(.batchCreate(req: request)) { (result) in
+                switch result {
+                case let .success(res):
+                    guard let dict = self.handle(response: res) else {
+                        completion([])
+                        return
+                    }
+                    let response = MediaItemsBatchCreate.Response(JSON: dict)
+                    completion(response?.newMediaItemResults ?? [])
+                    
+                case let .failure(error):
+                    self.handle(error: error)
+                    completion([])
+                }
+            }
+        }
+    }
+    
+    func upload(images: [UIImage], filenames: [String?] = [], completion: @escaping (([MediaItemsBatchCreate.NewMediaItemResult])->())) {
+        var images = images
+        var filenames = filenames
+        var tokens = [String]()
+        
+        func addItems() {
+            let req = MediaItemsBatchCreate.Request()
+            req.newMediaItems = tokens.map({
+                let simpleItem = MediaItemsBatchCreate.SimpleMediaItem()
+                simpleItem.uploadToken = $0
+                
+                let item = MediaItemsBatchCreate.NewMediaItem()
+                item.description = ""
+                item.simpleMediaItem = simpleItem
+                
+                return item
+            })
+            createBatch(with: req, completion: completion)
+        }
+        
+        func upload() {
+            if images.isEmpty {
+                addItems()
+                return
+            }
+            self.upload(image: images.popLast()!, filename: filenames.popLast()!) { (token) in
+                if let token = token { tokens.append(token) }
+                upload()
+            }
+        }
+        
+        upload()
+    }
+    
+}

@@ -8,11 +8,11 @@
 import Foundation
 import ObjectMapper
 
-internal class Status : BaseMappable {
-    var code: Int?
-    var message: String?
+public class Status : BaseMappable {
+    public var code: Int?
+    public var message: String?
     
-    override func mapping(map: Map) {
+    override public func mapping(map: Map) {
         code <- map["code"]
         message <- map["message"]
     }

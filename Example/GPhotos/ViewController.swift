@@ -8,6 +8,7 @@
 
 import UIKit
 import GPhotos
+import Photos
 
 class ViewController: UIViewController {
     
@@ -107,6 +108,18 @@ extension ViewController {
         })
     }
     
+    @objc func uploadMediaItem() {
+        if UIImagePickerController.isSourceTypeAvailable(.savedPhotosAlbum) {
+            let imagePicker = UIImagePickerController()
+            imagePicker.delegate = self
+            imagePicker.sourceType = .savedPhotosAlbum
+            imagePicker.allowsEditing = false
+            
+            present(imagePicker, animated: true, completion: nil)
+        }
+    }
+    
+    
 }
 
 // Albums
@@ -186,6 +199,8 @@ private extension ViewController {
             addButton(title: "Get last item", action: #selector(getMediaItem))
             addButton(title: "Get last 3 items", action: #selector(getBatchMediaItems))
             addSeparator()
+            addButton(title: "Upload media item", action: #selector(uploadMediaItem))
+            addSeparator()
             addSeparator()
             addButton(title: "List albums", action: #selector(listAlbums))
             addButton(title: "Reload list", action: #selector(reloadAlbumsList))
@@ -247,6 +262,36 @@ private extension ViewController {
         } else {
             loginB.setTitle("Login", for: .normal)
             loginB.backgroundColor = #colorLiteral(red: 0.1764705926, green: 0.4980392158, blue: 0.7568627596, alpha: 1)
+        }
+    }
+    
+    func filename(for info: [UIImagePickerController.InfoKey : Any]) -> String? {
+        var asset: PHAsset? = nil
+        
+        if #available(iOS 11.0, *) {
+            asset = info[UIImagePickerController.InfoKey.phAsset] as? PHAsset
+        } else if let imageURL = info[UIImagePickerController.InfoKey.referenceURL] as? URL {
+            asset = PHAsset.fetchAssets(withALAssetURLs: [imageURL], options: nil).firstObject
+        }
+        
+        return asset == nil ? nil :
+            PHAssetResource.assetResources(for: asset!).first?.originalFilename
+    }
+    
+}
+
+extension ViewController : UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        picker.dismiss(animated: true) {
+            UIApplication.shared.isNetworkActivityIndicatorVisible = true
+            
+            let image = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
+            let filename = self.filename(for: info)
+            
+            GPhotosApi.mediaItems.upload(images: [image], filenames: [filename], completion: { (res) in
+                UIApplication.shared.isNetworkActivityIndicatorVisible = false
+            })
         }
     }
     
