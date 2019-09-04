@@ -31,8 +31,7 @@ public extension Albums {
             return
         }
         
-        let requiredScopes: Set<AuthScope> = [.readOnly, .readDevData]
-        autoAuthorize(requiredScopes) {
+        autoAuthorize(scopes.read) {
             self.api.request(.list(req: self.currentList.request)) { (result) in
                 switch result {
                 case let .success(res):
@@ -64,8 +63,7 @@ public extension Albums {
 public extension Albums {
 
     func get(id: String, completion: @escaping ((Album?)->())) {
-        let requiredScopes: Set<AuthScope> = [.readOnly, .readDevData]
-        autoAuthorize(requiredScopes) {
+        autoAuthorize(scopes.read) {
             self.api.request(.get(id: id)) { (result) in
                 switch result {
                 case let .success(res):
@@ -90,8 +88,7 @@ public extension Albums {
 public extension Albums {
     
     func share(id: String, options: SharedAlbumOptions? = nil, completion: @escaping ((ShareInfo?)->())) {
-        let requiredScopes: Set<AuthScope> = [.sharing]
-        autoAuthorize(requiredScopes) {
+        autoAuthorize(scopes.share) {
             let req = AlbumsShare.Request()
             req.id = id
             req.sharedAlbumOptions = options
@@ -114,8 +111,7 @@ public extension Albums {
     }
     
     func unshare(id: String, completion: @escaping ((Bool)->())) {
-        let requiredScopes: Set<AuthScope> = [.sharing]
-        autoAuthorize(requiredScopes) {
+        autoAuthorize(scopes.share) {
             self.api.request(.unshare(id: id)) { (result) in
                 switch result {
                 case let .success(res):
@@ -140,8 +136,7 @@ public extension Albums {
 public extension Albums {
     
     func addEnrichment(id: String, enrichment: NewEnrichmentItem, position: AlbumPosition? = nil, options: SharedAlbumOptions? = nil, completion: @escaping ((String?)->())) {
-        let requiredScopes: Set<AuthScope> = [.appendOnly, .sharing]
-        autoAuthorize(requiredScopes) {
+        autoAuthorize(scopes.appendShare) {
             let req = AlbumsAddEnrichment.Request()
             req.id = id
             req.newEnrichmentItem = enrichment
@@ -165,8 +160,7 @@ public extension Albums {
     }
     
     func addMediaItems(id: String, mediaIds: [String], completion: @escaping ((Bool)->())) {
-        let requiredScopes: Set<AuthScope> = [.appendOnly, .sharing]
-        autoAuthorize(requiredScopes) {
+        autoAuthorize(scopes.appendShare) {
             let req = AlbumsAddMediaItems.Request()
             req.id = id
             req.mediaItemIds = mediaIds
@@ -189,8 +183,7 @@ public extension Albums {
     }
     
     func removeMediaItems(id: String, mediaIds: [String], completion: @escaping ((Bool)->())) {
-        let requiredScopes: Set<AuthScope> = [.sharing]
-        autoAuthorize(requiredScopes) {
+        autoAuthorize(scopes.readAppend) {
             let req = AlbumsAddMediaItems.Request()
             req.id = id
             req.mediaItemIds = mediaIds
@@ -213,8 +206,7 @@ public extension Albums {
     }
     
     func create(album: Album, completion: @escaping ((Album?)->())) {
-        let requiredScopes: Set<AuthScope> = [.appendOnly, .sharing]
-        autoAuthorize(requiredScopes) {
+        autoAuthorize(scopes.appendShare) {
             self.api.request(.create(album: album)) { (result) in
                 switch result {
                 case let .success(res):

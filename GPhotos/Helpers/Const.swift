@@ -26,6 +26,10 @@ internal var defaults = UserDefaults.standard
 
 //MARK: DispatchQueue
 
+func main(_ execute: @escaping (()->Void)) {
+    DispatchQueue.main.async { execute() }
+}
+
 func background(_ execute: @escaping (()->Void)) {
     DispatchQueue.global(qos: .background).async { execute() }
 }

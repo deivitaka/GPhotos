@@ -177,21 +177,23 @@ fileprivate extension GPhotos {
                                               responseType: OIDResponseTypeCode,
                                               additionalParameters: [:])
         
-        currentAuthFlow = OIDAuthState.authState(byPresenting: request, presenting: topVC!) { (state, error) in
-            guard let state = state else {
-                self.authorization = nil
+        main {
+            currentAuthFlow = OIDAuthState.authState(byPresenting: request, presenting: topVC!) { (state, error) in
+                guard let state = state else {
+                    self.authorization = nil
+                    completion?(success, error)
+                    return
+                }
+                
+                let auth = GTMAppAuthFetcherAuthorization(authState: state)
+                self.authorization = auth
+                defaults.setValue(Date().timeIntervalSinceReferenceDate,
+                                  forKey: Strings.lastTokenRefresh)
+                // Serialize to Keychain
+                success = GTMAppAuthFetcherAuthorization.save(auth, toKeychainForName: Strings.keychainName)
+                if !success { log.e("Could not save in keychain.") }
                 completion?(success, error)
-                return
             }
-            
-            let auth = GTMAppAuthFetcherAuthorization(authState: state)
-            self.authorization = auth
-            defaults.setValue(Date().timeIntervalSinceReferenceDate,
-                              forKey: Strings.lastTokenRefresh)
-            // Serialize to Keychain
-            success = GTMAppAuthFetcherAuthorization.save(auth, toKeychainForName: Strings.keychainName)
-            if !success { log.e("Could not save in keychain.") }
-            completion?(success, error)
         }
 
     }

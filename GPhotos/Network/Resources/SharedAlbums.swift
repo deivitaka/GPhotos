@@ -31,8 +31,7 @@ public extension SharedAlbums {
             return
         }
         
-        let requiredScopes: Set<AuthScope> = [.readOnly, .readDevData]
-        autoAuthorize(requiredScopes) {
+        autoAuthorize(scopes.read) {
             self.api.request(.list(req: self.currentList.request)) { (result) in
                 switch result {
                 case let .success(res):
@@ -64,8 +63,7 @@ public extension SharedAlbums {
 public extension SharedAlbums {
     
     func get(token: String, completion: @escaping ((Album?)->())) {
-        let requiredScopes: Set<AuthScope> = [.sharing]
-        autoAuthorize(requiredScopes) {
+        autoAuthorize(scopes.share) {
             self.api.request(.get(token: token)) { (result) in
                 switch result {
                 case let .success(res):
@@ -90,8 +88,7 @@ public extension SharedAlbums {
 public extension SharedAlbums {
     
     func join(token: String, completion: @escaping ((Album?)->())) {
-        let requiredScopes: Set<AuthScope> = [.sharing]
-        autoAuthorize(requiredScopes) {
+        autoAuthorize(scopes.share) {
             self.api.request(.join(token: token)) { (result) in
                 switch result {
                 case let .success(res):
@@ -111,8 +108,7 @@ public extension SharedAlbums {
     }
     
     func leave(token: String, completion: @escaping ((Album?)->())) {
-        let requiredScopes: Set<AuthScope> = [.sharing]
-        autoAuthorize(requiredScopes) {
+        autoAuthorize(scopes.share) {
             self.api.request(.leave(token: token)) { (result) in
                 switch result {
                 case let .success(res):

@@ -38,8 +38,7 @@ public extension MediaItems {
             return
         }
         
-        let requiredScopes: Set<AuthScope> = [.readOnly, .readDevData]
-        autoAuthorize(requiredScopes) {
+        autoAuthorize(scopes.read) {
             self.api.request(.list(req: self.currentList.request)) { (result) in
                 switch result {
                 case let .success(res):
@@ -81,8 +80,7 @@ public extension MediaItems {
             return
         }
         
-        let requiredScopes: Set<AuthScope> = [.readOnly, .readDevData]
-        autoAuthorize(requiredScopes) {
+        autoAuthorize(scopes.read) {
             self.api.request(.search(req: self.currentSearch.request)) { (result) in
                 switch result {
                 case let .success(res):
@@ -113,8 +111,7 @@ public extension MediaItems {
 public extension MediaItems {
     
     func get(id: String, completion: @escaping ((MediaItem?)->())) {
-        let requiredScopes: Set<AuthScope> = [.readOnly, .readDevData]
-        autoAuthorize(requiredScopes) {
+        autoAuthorize(scopes.read) {
             self.api.request(.get(id: id)) { (result) in
                 switch result {
                 case let .success(res):
@@ -134,8 +131,7 @@ public extension MediaItems {
     }
     
     func getBatch(ids: [String], completion: @escaping (([MediaItem])->())) {
-        let requiredScopes: Set<AuthScope> = [.readOnly, .readDevData]
-        autoAuthorize(requiredScopes) {
+        autoAuthorize(scopes.read) {
             let req = MediaItemsBatchGet.Request()
             req.mediaItemIds = ids
             self.api.request(.batchGet(req: req)) { (result) in
@@ -163,12 +159,11 @@ public extension MediaItems {
 public extension MediaItems {
     
     internal func upload(image: UIImage, filename: String? = nil, completion: @escaping ((String?)->())) {
-        let requiredScopes: Set<AuthScope> = [.appendOnly]
         guard let data = image.pngData() else {
             completion(nil)
             return
         }
-        autoAuthorize(requiredScopes) {
+        autoAuthorize(scopes.append) {
             self.api.request(.upload(image: data, filename: filename)) { (result) in
                 switch result {
                 case let .success(res):
@@ -188,8 +183,7 @@ public extension MediaItems {
     }
     
     internal func createBatch(with request: MediaItemsBatchCreate.Request, completion: @escaping (([MediaItemsBatchCreate.NewMediaItemResult])->())) {
-        let requiredScopes: Set<AuthScope> = [.appendOnly, .sharing]
-        autoAuthorize(requiredScopes) {
+        autoAuthorize(scopes.appendShare) {
             self.api.request(.batchCreate(req: request)) { (result) in
                 switch result {
                 case let .success(res):

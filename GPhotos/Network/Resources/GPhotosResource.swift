@@ -9,6 +9,17 @@ import Foundation
 import Moya
 
 public class GPhotosResource {
+    internal typealias ScopeSet = (required: Set<AuthScope>, optional: Set<AuthScope>)
+    
+    internal struct scopes {
+        private init() {}
+        static let read: ScopeSet = ([.readOnly, .readDevData], [.readAndAppend])
+        static let readAppend: ScopeSet = ([.readAndAppend], [])
+        static let append: ScopeSet = ([.appendOnly], [.readAndAppend])
+        static let appendShare: ScopeSet = ([.appendOnly, .sharing], [.readAndAppend])
+        static let share: ScopeSet = ([.sharing], [])
+    }
+    
     internal init() {}
 }
 
@@ -40,9 +51,14 @@ internal extension GPhotosResource {
         log.e(error.message)
     }
     
-    func autoAuthorize(_ scopes: Set<AuthScope>, completion: @escaping ()->()) {
+    func autoAuthorize(_ scopes: ScopeSet, completion: @escaping ()->()) {
         if config.automaticallyAskPermissions {
-            GPhotos.authorize(with: scopes) { (success, error) in
+            if GPhotos.checkScopes(with: Array(scopes.optional)) {
+                GPhotos.refreshTokenIfNeeded(completion: completion)
+                return
+            }
+            
+            GPhotos.authorize(with: scopes.required) { (success, error) in
                 if let error = error {
                     log.e(error.localizedDescription)
                     return
