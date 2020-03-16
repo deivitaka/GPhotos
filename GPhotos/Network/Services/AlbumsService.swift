@@ -62,7 +62,7 @@ extension AlbumsService : GPhotosService {
         case .list(let req):
             return get(req)
         case .share(let req):
-            return get(req)
+            return post(req)
         case .get,
              .unshare:
             return .requestPlain
