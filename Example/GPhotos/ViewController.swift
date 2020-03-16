@@ -139,6 +139,23 @@ extension ViewController {
         }
     }
     
+    @objc func createAlbum() {
+        guard let last = self.items.last else {
+            print ("List or search first")
+            return
+        }
+        
+        let album = Album()
+        album.title = "Test album"
+        album.mediaItemsCount = "1"
+        GPhotosApi.albums.create(album: album, completion: { (item) in
+            if let item = item {
+                print (item.id)
+                self.albumList = [item]
+            }
+        })
+    }
+    
     @objc func getAlbum() {
         guard let last = self.albumList.last else {
             print ("List first")
@@ -148,6 +165,20 @@ extension ViewController {
         GPhotosApi.albums.get(id: last.id, completion: { (item) in
             print (item?.id)
         })
+    }
+    
+    @objc func shareAlbum() {
+        guard let last = self.albumList.last else {
+            print ("List first")
+            return
+        }
+        
+        let options = SharedAlbumOptions()
+        options.isCollaborative = true
+        options.isCommentable = true
+        GPhotosApi.albums.share(id: last.id, options: options) { (info) in
+            print (info?.shareableUrl)
+        }
     }
 
 }
@@ -205,7 +236,9 @@ private extension ViewController {
             addButton(title: "List albums", action: #selector(listAlbums))
             addButton(title: "Reload list", action: #selector(reloadAlbumsList))
             addSeparator()
+            addButton(title: "Create album", action: #selector(createAlbum))
             addButton(title: "Get last album", action: #selector(getAlbum))
+            addButton(title: "Share album", action: #selector(shareAlbum))
             addSeparator()
             addSeparator()
             addButton(title: "List shared albums", action: #selector(listSharedAlbums))
