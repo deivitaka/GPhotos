@@ -139,6 +139,23 @@ extension ViewController {
         }
     }
     
+    @objc func createAlbum() {
+        guard let last = self.items.last else {
+            print ("List or search first")
+            return
+        }
+        
+        let album = Album()
+        album.title = "Test album"
+        album.mediaItemsCount = "1"
+        GPhotosApi.albums.create(album: album, completion: { (item) in
+            if let item = item {
+                print (item.id)
+                self.albumList = [item]
+            }
+        })
+    }
+    
     @objc func getAlbum() {
         guard let last = self.albumList.last else {
             print ("List first")
@@ -148,6 +165,20 @@ extension ViewController {
         GPhotosApi.albums.get(id: last.id, completion: { (item) in
             print (item?.id)
         })
+    }
+    
+    @objc func shareAlbum() {
+        guard let last = self.albumList.last else {
+            print ("List first")
+            return
+        }
+        
+        let options = SharedAlbumOptions()
+        options.isCollaborative = true
+        options.isCommentable = true
+        GPhotosApi.albums.share(id: last.id, options: options) { (info) in
+            print (info?.shareableUrl)
+        }
     }
 
 }
@@ -183,10 +214,16 @@ private extension ViewController {
             view.addSubview(loginB)
             updateLoginButton()
             
-            let loginConstrTop = NSLayoutConstraint(item: loginB!, attribute: .top, relatedBy: .equal, toItem: view, attribute: .topMargin, multiplier: 1, constant: 10)
-            let loginConstrX = NSLayoutConstraint(item: loginB!, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1, constant: 0)
-            
-            NSLayoutConstraint.activate([ loginConstrTop, loginConstrX ])
+            let top: NSLayoutYAxisAnchor
+            if #available(iOS 11.0, *) {
+                top = view.safeAreaLayoutGuide.topAnchor
+            } else {
+                top = view.topAnchor
+            }
+            NSLayoutConstraint.activate([
+                loginB.topAnchor.constraint(equalTo: top, constant: 10),
+                loginB.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            ])
         }
         
         func addItems() {
@@ -205,7 +242,9 @@ private extension ViewController {
             addButton(title: "List albums", action: #selector(listAlbums))
             addButton(title: "Reload list", action: #selector(reloadAlbumsList))
             addSeparator()
+            addButton(title: "Create album", action: #selector(createAlbum))
             addButton(title: "Get last album", action: #selector(getAlbum))
+            addButton(title: "Share album", action: #selector(shareAlbum))
             addSeparator()
             addSeparator()
             addButton(title: "List shared albums", action: #selector(listSharedAlbums))
@@ -222,20 +261,41 @@ private extension ViewController {
             stackView.isHidden = !GPhotos.isAuthorized
             
             addItems()
-            view.addSubview(stackView)
+        }
+        
+        func setupScrollView() {
+            let scrollView = UIScrollView()
+            scrollView.translatesAutoresizingMaskIntoConstraints = false
             
-            let svConstrLeft = NSLayoutConstraint(item: stackView!, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1, constant: 50)
-            let svConstrRight = NSLayoutConstraint(item: stackView!, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1, constant: -50)
-            let svConstrTop = NSLayoutConstraint(item: stackView!, attribute: .top, relatedBy: .lessThanOrEqual, toItem: loginB, attribute: .bottom, multiplier: 1, constant: 20)
-            let svConstrBottom = NSLayoutConstraint(item: stackView!, attribute: .bottom, relatedBy: .lessThanOrEqual, toItem: view, attribute: .bottom, multiplier: 1, constant: -50)
+            setupStackView()
+            scrollView.addSubview(stackView)
+            view.addSubview(scrollView)
             
             NSLayoutConstraint.activate([
-                svConstrLeft, svConstrRight, svConstrTop, svConstrBottom,
+                stackView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
+                stackView.leftAnchor.constraint(equalTo: scrollView.leftAnchor),
+                stackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+                stackView.rightAnchor.constraint(equalTo: scrollView.rightAnchor),
+                stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            ])
+            
+            let bottom: NSLayoutYAxisAnchor
+            if #available(iOS 11.0, *) {
+                bottom = view.safeAreaLayoutGuide.bottomAnchor
+            } else {
+                bottom = view.bottomAnchor
+            }
+            NSLayoutConstraint.activate([
+                scrollView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                scrollView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 50),
+                scrollView.topAnchor.constraint(equalTo: loginB.bottomAnchor, constant: 10),
+                view.rightAnchor.constraint(equalTo: scrollView.rightAnchor, constant: 50),
+                bottom.constraint(equalTo: scrollView.bottomAnchor, constant: 10)
             ])
         }
         
         setupLogin()
-        setupStackView()
+        setupScrollView()
     }
     
     func addButton(title: String, action: Selector) {
