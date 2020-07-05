@@ -92,19 +92,27 @@ internal struct Google {
 
 internal struct log {
     
+    /// Debug log
     static func d(_ messages: Any...) {
         if !config.printLogs { return }
-        let message = messages
-            .map({ String(describing: $0) })
-            .joined()
-        print("GPhotos D: \(message)")
+        print("GPhotos D: \(logMessage(from: messages))")
     }
     
+    /// Error log
     static func e(_ messages: Any...) {
-        let message = messages
+        print("GPhotos E: \(logMessage(from: messages))")
+    }
+    
+    /// Warning log
+    static func w(_ messages: Any...) {
+        if !config.printLogs { return }
+        print("GPhotos W: \(logMessage(from: messages))")
+    }
+    
+    private static func logMessage(from messages: Any...) -> String {
+        messages
             .map({ String(describing: $0) })
             .joined()
-        print("GPhotos E: \(message)")
     }
     
 }

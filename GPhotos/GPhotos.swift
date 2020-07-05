@@ -124,10 +124,15 @@ internal extension GPhotos {
         }
     }
     
-    static func checkScopes(with scopes: [AuthScope]) -> Bool {
+    static func checkScopes(with scopes: [AuthScope], required: Bool) -> Bool {
         if !Google.currentScopes.contains(where: { scopes.contains($0)}) {
             let scopes = scopes.map({ String(describing: $0) })
-            log.e("Need to authorize with one of the scopes: \(scopes)")
+            let message = "Need to authorize with one of the scopes: \(scopes)"
+            if required {
+                log.e(message)
+            } else {
+                log.w(message)
+            }
             return false
         }
         return true

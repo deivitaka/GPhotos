@@ -53,7 +53,7 @@ internal extension GPhotosResource {
     
     func autoAuthorize(_ scopes: ScopeSet, completion: @escaping ()->()) {
         if config.automaticallyAskPermissions {
-            if GPhotos.checkScopes(with: Array(scopes.optional)) {
+            if GPhotos.checkScopes(with: Array(scopes.optional), required: false) {
                 GPhotos.refreshTokenIfNeeded(completion: completion)
                 return
             }
