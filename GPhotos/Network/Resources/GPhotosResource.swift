@@ -13,7 +13,7 @@ public class GPhotosResource {
     
     internal struct scopes {
         private init() {}
-        static let read: ScopeSet = ([.readOnly, .readDevData], [.readAndAppend])
+        static let read: ScopeSet = ([.readOnly], [.readDevData, .readAndAppend])
         static let readAppend: ScopeSet = ([.readAndAppend], [])
         static let append: ScopeSet = ([.appendOnly], [.readAndAppend])
         static let appendShare: ScopeSet = ([.appendOnly, .sharing], [.readAndAppend])
