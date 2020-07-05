@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name             = 'GPhotos'
-    s.version          = '0.5.2'
+    s.version          = '0.5.3'
     s.summary          = 'A wrapper around the Google Photos API for iOS.'
     s.description      = <<-DESC
     I wanted to consume the Google Photos API in Swift but at the time of writing there is no framework
