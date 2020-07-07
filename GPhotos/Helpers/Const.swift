@@ -11,7 +11,7 @@ import GTMAppAuth
 
 //MARK: Global variables
 
-internal var topVC: UIViewController? = {
+internal var topVC: UIViewController? {
     if var topController = UIApplication.shared.keyWindow?.rootViewController {
         while let presentedViewController = topController.presentedViewController {
             topController = presentedViewController
@@ -19,7 +19,7 @@ internal var topVC: UIViewController? = {
         return topController
     }
     return nil
-}()
+}
 
 internal var config = Config()
 internal var defaults = UserDefaults.standard
