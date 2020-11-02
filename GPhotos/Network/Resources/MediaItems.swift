@@ -10,6 +10,8 @@ import Moya
 
 public class MediaItems : GPhotosResource {
     
+    public typealias Item = (image: UIImage, filename: String?)
+    
     fileprivate let api = MoyaProvider<MediaItemsService>(plugins: GPhotosApi.plugins)
     
     // MARK: List
@@ -158,13 +160,13 @@ public extension MediaItems {
 // MARK:- Batch create
 public extension MediaItems {
     
-    internal func upload(image: UIImage, filename: String? = nil, completion: @escaping ((String?)->())) {
-        guard let data = image.pngData() else {
+    internal func upload(item: Item, completion: @escaping ((String?)->())) {
+        guard let data = item.image.pngData() else {
             completion(nil)
             return
         }
         autoAuthorize(scopes.append) {
-            self.api.request(.upload(image: data, filename: filename)) { (result) in
+            self.api.request(.upload(image: data, filename: item.filename)) { (result) in
                 switch result {
                 case let .success(res):
                     guard let res = try? res.filterSuccessfulStatusCodes(),
@@ -202,9 +204,8 @@ public extension MediaItems {
         }
     }
     
-    func upload(images: [UIImage], filenames: [String?] = [], completion: @escaping (([MediaItemsBatchCreate.NewMediaItemResult])->())) {
-        var images = images
-        var filenames = filenames
+    func upload(items: [Item], completion: @escaping (([MediaItemsBatchCreate.NewMediaItemResult])->())) {
+        var items = items
         var tokens = [String]()
         
         func addItems() {
@@ -223,11 +224,11 @@ public extension MediaItems {
         }
         
         func upload() {
-            if images.isEmpty {
+            if items.isEmpty {
                 addItems()
                 return
             }
-            self.upload(image: images.popLast()!, filename: filenames.popLast()!) { (token) in
+            self.upload(item: items.popLast()!) { (token) in
                 if let token = token { tokens.append(token) }
                 upload()
             }
