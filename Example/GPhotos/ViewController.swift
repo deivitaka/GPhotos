@@ -346,10 +346,12 @@ extension ViewController : UINavigationControllerDelegate, UIImagePickerControll
         picker.dismiss(animated: true) {
             UIApplication.shared.isNetworkActivityIndicatorVisible = true
             
-            let image = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
-            let filename = self.filename(for: info)
+            let item = (
+                info[UIImagePickerController.InfoKey.originalImage] as! UIImage,
+                self.filename(for: info)
+            )
             
-            GPhotosApi.mediaItems.upload(images: [image], filenames: [filename], completion: { (res) in
+            GPhotosApi.mediaItems.upload(items: [item], completion: { (res) in
                 UIApplication.shared.isNetworkActivityIndicatorVisible = false
             })
         }
