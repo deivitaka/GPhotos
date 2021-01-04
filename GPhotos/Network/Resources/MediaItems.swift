@@ -10,7 +10,37 @@ import Moya
 
 public class MediaItems : GPhotosResource {
     
-    public typealias Item = (image: UIImage, filename: String?)
+    public struct Item {
+        let image: UIImage?
+        let data: Data?
+        let url: URL?
+        let filename: String?
+        let mimeType: MimeType?
+        
+        public init(image: UIImage, filename: String? = nil, mimeType: MimeType? = nil) {
+            self.image = image
+            data = nil
+            url = nil
+            self.filename = filename
+            self.mimeType = mimeType
+        }
+        
+        public init(data: Data, filename: String?, mimeType: MimeType? = nil) {
+            image = nil
+            self.data = data
+            url = nil
+            self.filename = filename
+            self.mimeType = mimeType
+        }
+        
+        public init(url: URL, filename: String? = nil, mimeType: MimeType? = nil) {
+            image = nil
+            data = nil
+            self.url = url
+            self.filename = filename
+            self.mimeType = mimeType
+        }
+    }
     
     fileprivate let api = MoyaProvider<MediaItemsService>(plugins: GPhotosApi.plugins)
     
@@ -107,6 +137,7 @@ public extension MediaItems {
         currentSearch = Search()
         search(with: request, completion: completion)
     }
+    
 }
 
 // MARK:- Get
@@ -161,12 +192,23 @@ public extension MediaItems {
 public extension MediaItems {
     
     internal func upload(item: Item, completion: @escaping ((String?)->())) {
-        guard let data = item.image.pngData() else {
+        var data = item.image?.pngData() ?? item.data
+        if data == nil,
+           let url = item.url {
+            data = try? Data(contentsOf: url)
+        }
+        if data == nil {
             completion(nil)
             return
         }
+        let filename = item.filename ?? item.url?.lastPathComponent
+        let mime = item.mimeType ?? mimeType(ext: item.url?.pathExtension)
+        upload(data: data!, filename: filename, mimeType: mime, completion: completion)
+    }
+    
+    internal func upload(data: Data, filename: String?, mimeType: MimeType?, completion: @escaping ((String?)->())) {
         autoAuthorize(scopes.append) {
-            self.api.request(.upload(image: data, filename: item.filename)) { (result) in
+            self.api.request(.upload(image: data, filename: filename, mimeType: mimeType?.rawValue)) { (result) in
                 switch result {
                 case let .success(res):
                     guard let res = try? res.filterSuccessfulStatusCodes(),

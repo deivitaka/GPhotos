@@ -24,6 +24,32 @@ internal var topVC: UIViewController? = {
 internal var config = Config()
 internal var defaults = UserDefaults.standard
 
+public func mimeType(ext: String?) -> MimeType? {
+    switch ext?.lowercased() {
+    case "gif": return .gif
+    case "jpeg", "jpg": return .jpeg
+    case "png": return .png
+    case "tif", "tiff": return .tiff
+    case "wbmp": return .wbmp
+    case "ico": return .ico
+    case "bmp": return .bmp
+    case "webp": return .webp
+    case "3gpp", "3gp": return ._3gpp
+    case "ts": return .ts
+    case "mp4": return .mp4
+    case "mpeg", "mpg": return .mpeg
+    case "mov": return .mov
+    case "webm": return .webm
+    case "flv": return .flv
+    case "m4v": return .m4v
+    case "mng": return .mng
+    case "asx", "asf": return .asx
+    case "wmv": return .wmv
+    case "avi": return .avi
+    default: return nil
+    }
+}
+
 //MARK: DispatchQueue
 
 func main(_ execute: @escaping (()->Void)) {

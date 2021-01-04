@@ -16,19 +16,25 @@ internal enum MediaItemsService {
     case batchGet(req: MediaItemsBatchGet.Request)
     case search(req: MediaItemsSearch.Request)
     case batchCreate(req: MediaItemsBatchCreate.Request)
-    case upload(image: Data, filename: String?)
+    case upload(image: Data, filename: String?, mimeType: String?)
 }
 
 extension MediaItemsService : GPhotosService {
     var headers: [String: String]? {
         switch self {
-        case .upload(_, let filename):
-            return [
+        case .upload(_, let filename, let mimeType):
+            var headers = [
                 "Content-type": "application/octet-stream",
                 "X-Goog-Upload-Protocol": "raw",
-                "X-Goog-Upload-File-Name": filename ?? "",
                 "Accept-Encoding": "gzip"
             ]
+            if let filename = filename {
+                headers.updateValue(filename, forKey: "X-Goog-Upload-File-Name")
+            }
+            if let mimeType = mimeType {
+                headers.updateValue(mimeType, forKey: "X-Goog-Upload-Content-Type")
+            }
+            return headers
         default:
             return [
                 "Content-type": "application/json",
@@ -81,7 +87,7 @@ extension MediaItemsService : GPhotosService {
             return post(req)
         case .batchCreate(let req):
             return post(req)
-        case .upload(let image, _):
+        case .upload(let image, _, _):
             return .requestData(image)
         }
     }
