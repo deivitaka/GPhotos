@@ -114,6 +114,7 @@ extension ViewController {
             imagePicker.delegate = self
             imagePicker.sourceType = .savedPhotosAlbum
             imagePicker.allowsEditing = false
+            imagePicker.mediaTypes = ["public.image", "public.movie"]
             
             present(imagePicker, animated: true, completion: nil)
         }
@@ -346,11 +347,22 @@ extension ViewController : UINavigationControllerDelegate, UIImagePickerControll
         picker.dismiss(animated: true) {
             UIApplication.shared.isNetworkActivityIndicatorVisible = true
             
-            let item = (
-                info[UIImagePickerController.InfoKey.originalImage] as! UIImage,
-                self.filename(for: info)
-            )
+            let item: MediaItems.Item
             
+            if info[UIImagePickerController.InfoKey.mediaType] as? String == "public.movie" {
+                let url = info[UIImagePickerController.InfoKey.mediaURL] as! URL
+                item = MediaItems.Item(url: url)
+            } else {
+                if #available(iOS 11.0, *) {
+                    let url = info[UIImagePickerController.InfoKey.imageURL] as! URL
+                    item = MediaItems.Item(url: url)
+                } else {
+                    let img = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
+                    item = MediaItems.Item(data: img.jpegData(compressionQuality: 1)!, filename: self.filename(for: info))
+                }
+                
+            }
+
             GPhotosApi.mediaItems.upload(items: [item], completion: { (res) in
                 UIApplication.shared.isNetworkActivityIndicatorVisible = false
             })
