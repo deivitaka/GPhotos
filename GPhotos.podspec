@@ -18,11 +18,11 @@ Pod::Spec.new do |s|
     s.source_files  = "GPhotos/**/*"
     # s.exclude_files = "GPhotosTests/*.swift"
     s.swift_version = "5.0"
-    s.platform     = :ios, "8.0"
+    s.platform     = :ios, "10.0"
     
-    s.dependency 'GTMAppAuth', '~> 1.0.0'
-    s.dependency 'AppAuth', '~> 1.0'
-    s.dependency 'Moya', '~> 13.0'
-    s.dependency 'ObjectMapper', '~> 3.4'
+    s.dependency 'GTMAppAuth', '~> 1.1.0'
+    s.dependency 'AppAuth', '~> 1.4'
+    s.dependency 'Moya', '~> 14.0'
+    s.dependency 'ObjectMapper', '~> 4.2'
 
 end

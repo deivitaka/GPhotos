@@ -12,7 +12,7 @@ import ObjectMapper
 protocol GPhotosService : AccessTokenAuthorizable, TargetType {}
 
 extension GPhotosService {
-    var authorizationType: AuthorizationType { return .bearer }
+    var authorizationType: AuthorizationType? { return .bearer }
     var baseURL: URL { return URL(string: "https://photoslibrary.googleapis.com/v1")! }
     var sampleData: Data { return Data() }
     var headers: [String: String]? { return [
